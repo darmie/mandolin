@@ -1,0 +1,2 @@
+-cp src/
+-java bin/Mandolin.jar

@@ -1,0 +1,13 @@
+-cp src/
+-dce no
+co.zenturi.mandolin.TestModule
+
+--interp
+
+# --next
+
+# -java-lib lib/classes.jar
+
+
+
+# -java bin/java/
