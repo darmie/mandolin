@@ -85,6 +85,7 @@ class ReactModuleCpp {
         sbuf.add("#pragma once\n\n");
         
         sbuf.add('#include <$nHeader.h>\n\n');
+        sbuf.add('#include <mandolin_helpers.h>\n\n');
 
         sbuf.add("namespace mandolin_generated {\n\n");
         sbuf.add("}\n");
