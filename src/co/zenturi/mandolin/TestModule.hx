@@ -1,9 +1,10 @@
 package co.zenturi.mandolin;
 
-import co.zenturi.mandolin.react.ReactModule;
 
+@:build(co.zenturi.mandolin.macros.ReactModule.bind())
+@:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind())
 @:keep
-class TestModule implements  ReactModule {
+class TestModule {
 
     @:isVar public var value(get, set):String;
 
@@ -37,6 +38,6 @@ class TestModule implements  ReactModule {
     }
 
     function testMap(map:Map<String, Int>){
-        
+
     }
 }
