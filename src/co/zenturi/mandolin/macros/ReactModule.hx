@@ -240,7 +240,8 @@ class ReactModule {
 			case "String": "String";
 			case "Int" | "haxe.Int32": "int";
 			case "Int64": "long";
-			case "Float": "double";
+            case "Float": "double";
+            case "Event": isProxy ? "co.zenturi.mandolin.xnative.Event" : "Event";
             case "Callback": isProxy ? "co.zenturi.mandolin.xnative.Callback" : "Callback";
             case "Map": isProxy ? "co.zenturi.mandolin.xnative.Map" : "ReadableMap";
             case "Array": isProxy ? "co.zenturi.mandolin.xnative.Array" : "ReadableArray";
