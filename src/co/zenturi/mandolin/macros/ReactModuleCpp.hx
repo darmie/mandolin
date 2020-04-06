@@ -85,16 +85,12 @@ class ReactModuleCpp {
 		
 		
 		var buildXml = new StringBuf();
-		// buildXml.add("<xml>\n");
 		buildXml.add("<files id='haxe'>\n");
 		buildXml.add('<compilerflag value="-I$classPath"/>\n');
 		for(cp in cppFiles){
 			buildXml.add('<file name="$cp" />\n');
 		}
 		buildXml.add("</files>\n");
-		// buildXml.add("</xml>\n");
-
-		// File.saveContent('$classPath/$_name.xml', buildXml.toString());
 
 		var _class = Context.getLocalClass();
 		var _pos =  Context.currentPos();

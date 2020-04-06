@@ -1,5 +1,7 @@
 -cp src/
 -dce no
+
+co.zenturi.mandolin.react.ReactBuild
 co.zenturi.mandolin.xnative.JavascriptObject
 co.zenturi.mandolin.xnative.JavascriptType
 co.zenturi.mandolin.xnative.JavascriptCallback
