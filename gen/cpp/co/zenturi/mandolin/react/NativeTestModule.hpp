@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <co/zenturi/mandolin/TestModule.h>
+#include "TestModule.hpp"
 
 #include <mandolin_helpers.h>
 

@@ -3,7 +3,7 @@
 
 package co.zenturi.mandolin.react;
 
-import co.zenturi.madolin.Mandolin;
+import co.zenturi.madolin.xnative.react.*;
 import com.facebook.react.bridge.*;
 import com.facebook.react.module.annotations.ReactModule;
 import java.util.HashMap;
@@ -23,8 +23,8 @@ public final class TestModule extends ReactContextBaseJavaModule {
 	private static native CppProxy create(co.zenturi.mandolin.ReactBridge bridge);
 
 	@ReactMethod
-	public void init(){
-		mModule.init();
+	public void init(int x){
+		mModule.init(x);
 	}
 
 
@@ -36,37 +36,37 @@ public final class TestModule extends ReactContextBaseJavaModule {
 
 	@ReactMethod
 	public void getValue(Promise promise){
-		mModule.getValue(Mandolin.wrap(promise));
+		mModule.getValue(MandolinReact.wrap(promise));
 	}
 
 
 	@ReactMethod
 	public void setValue(String value, Promise promise){
-		mModule.setValue(value, Mandolin.wrap(promise));
+		mModule.setValue(value, MandolinReact.wrap(promise));
 	}
 
 
 	@ReactMethod
 	public void setUpdate(Callback callback){
-		mModule.setUpdate(Mandolin.wrap(callback));
+		mModule.setUpdate(MandolinReact.wrap(callback));
 	}
 
 
 	@ReactMethod
 	public void add(int x, long y, Promise promise){
-		mModule.add(x, y, Mandolin.wrap(promise));
+		mModule.add(x, y, MandolinReact.wrap(promise));
 	}
 
 
 	@ReactMethod
-	public void testArray(ReadableArray arr){
-		mModule.testArray(Mandolin.wrap(arr));
+	public void testArray(ReadableArray arr, Promise promise){
+		mModule.testArray(MandolinReact.wrap(arr), MandolinReact.wrap(promise));
 	}
 
 
 	@ReactMethod
-	public void testMap(ReadableMap map){
-		mModule.testMap(Mandolin.wrap(map));
+	public void testMap(ReadableMap map, Promise promise){
+		mModule.testMap(MandolinReact.wrap(map), MandolinReact.wrap(promise));
 	}
 
 
@@ -91,11 +91,11 @@ public final class TestModule extends ReactContextBaseJavaModule {
 		}
 
 
-		public void init(){
+		public void init(int x){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
-			native_init(this.nativeRef);
+			native_init(this.nativeRef, x);
 		}
-		private native void native_init(long _nativeRef);
+		private native void native_init(long _nativeRef, int x);
 
 
 		public void doSomething(){
@@ -105,46 +105,46 @@ public final class TestModule extends ReactContextBaseJavaModule {
 		private native void native_doSomething(long _nativeRef);
 
 
-		public void getValue(co.zenturi.mandolin.xnative.Promise promise){
+		public void getValue(co.zenturi.mandolin.xnative.react.JavascriptPromise promise){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
 			native_getValue(this.nativeRef, promise);
 		}
-		private native void native_getValue(long _nativeRef, co.zenturi.mandolin.xnative.Promise promise);
+		private native void native_getValue(long _nativeRef, co.zenturi.mandolin.xnative.react.JavascriptPromise promise);
 
 
-		public void setValue(String value, co.zenturi.mandolin.xnative.Promise promise){
+		public void setValue(String value, co.zenturi.mandolin.xnative.react.JavascriptPromise promise){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
 			native_setValue(this.nativeRef, value, promise);
 		}
-		private native void native_setValue(long _nativeRef, String value, co.zenturi.mandolin.xnative.Promise promise);
+		private native void native_setValue(long _nativeRef, String value, co.zenturi.mandolin.xnative.react.JavascriptPromise promise);
 
 
-		public void setUpdate(co.zenturi.mandolin.xnative.Callback callback){
+		public void setUpdate(co.zenturi.mandolin.xnative.react.JavascriptCallback callback){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
 			native_setUpdate(this.nativeRef, callback);
 		}
-		private native void native_setUpdate(long _nativeRef, co.zenturi.mandolin.xnative.Callback callback);
+		private native void native_setUpdate(long _nativeRef, co.zenturi.mandolin.xnative.react.JavascriptCallback callback);
 
 
-		public void add(int x, long y, co.zenturi.mandolin.xnative.Promise promise){
+		public void add(int x, long y, co.zenturi.mandolin.xnative.react.JavascriptPromise promise){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
 			native_add(this.nativeRef, x, y, promise);
 		}
-		private native void native_add(long _nativeRef, int x, long y, co.zenturi.mandolin.xnative.Promise promise);
+		private native void native_add(long _nativeRef, int x, long y, co.zenturi.mandolin.xnative.react.JavascriptPromise promise);
 
 
-		public void testArray(co.zenturi.mandolin.xnative.Array arr){
+		public void testArray(co.zenturi.mandolin.xnative.react.JavascriptArray arr, co.zenturi.mandolin.xnative.react.JavascriptPromise promise){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
-			native_testArray(this.nativeRef, arr);
+			native_testArray(this.nativeRef, arr, promise);
 		}
-		private native void native_testArray(long _nativeRef, co.zenturi.mandolin.xnative.Array arr);
+		private native void native_testArray(long _nativeRef, co.zenturi.mandolin.xnative.react.JavascriptArray arr, co.zenturi.mandolin.xnative.react.JavascriptPromise promise);
 
 
-		public void testMap(co.zenturi.mandolin.xnative.Map map){
+		public void testMap(co.zenturi.mandolin.xnative.react.JavascriptMap map, co.zenturi.mandolin.xnative.react.JavascriptPromise promise){
 			assert !this.destroyed.get() : "trying to use a destroyed object";
-			native_testMap(this.nativeRef, map);
+			native_testMap(this.nativeRef, map, promise);
 		}
-		private native void native_testMap(long _nativeRef, co.zenturi.mandolin.xnative.Map map);
+		private native void native_testMap(long _nativeRef, co.zenturi.mandolin.xnative.react.JavascriptMap map, co.zenturi.mandolin.xnative.react.JavascriptPromise promise);
 
 	}
 }

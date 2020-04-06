@@ -2,13 +2,13 @@ package co.zenturi.mandolin;
 
 
 @:build(co.zenturi.mandolin.macros.ReactModule.bind())
-@:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind())
+@:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind(true))
 @:keep
 class TestModule {
 
     @:isVar public var value(get, set):String;
 
-    public function new() {}
+    public function new(x:Int) {}
     
     @:keep
     public function doSomething() {
@@ -33,11 +33,11 @@ class TestModule {
         return 0;
     }
 
-    function testArray(arr:Array<String>){
-
+    function testArray(arr:Array<String>):Array<String>{
+        return arr;
     }
 
-    function testMap(map:Map<String, Int>){
-
+    function testMap(map:Map<String, Int>):Map<String, Int>{
+        return map;
     }
 }
