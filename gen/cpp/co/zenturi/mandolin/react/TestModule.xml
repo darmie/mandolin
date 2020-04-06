@@ -1,0 +1,5 @@
+<files id='haxe'>
+<compilerflag value="-I/Volumes/Vibranium/Workspace/Zenturi/project/Mandolin/gen/cpp/co/zenturi/mandolin/react"/>
+<file name="/Volumes/Vibranium/Workspace/Zenturi/project/Mandolin/gen/cpp/co/zenturi/mandolin/react/NativeTestModule.cpp" />
+<file name="/Volumes/Vibranium/Workspace/Zenturi/project/Mandolin/gen/cpp/co/zenturi/mandolin/react/TestModule.cpp" />
+</files>
