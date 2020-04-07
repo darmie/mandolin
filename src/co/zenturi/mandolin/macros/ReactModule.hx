@@ -13,7 +13,8 @@ class ReactModule {
 	static var moduleName:String;
 
 	macro static public function bind():Array<Field> {
-        var pack = Context.getLocalModule();
+		var pack = Context.getLocalModule();
+		// (new Builder.HxmlBuilder()).push(pack);
         var unpack = pack.split(".");
         var pathLength = unpack.length;
         var name = unpack[pathLength - 1];

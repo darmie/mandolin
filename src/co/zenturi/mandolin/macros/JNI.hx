@@ -22,6 +22,8 @@ class JNI {
 	 * @return Array<Field>
 	 */
 	macro static function bind():Array<Field> {
+		var pack = Context.getLocalModule();
+		// (new Builder.HxmlBuilder()).push(pack);
 		return null;
 	}
 
@@ -64,6 +66,7 @@ class JNI {
 		var dir = Sys.getCwd();
 
 		var pack = Context.getLocalModule();
+		(new Builder.HxmlBuilder()).push(pack);
 		var pathLength = pack.split(".").length;
 		var unpack = pack.split(".");
 		var packPath = unpack.slice(0, pathLength - 1).join("/");
@@ -743,5 +746,21 @@ class JNI {
 				case _:
 			}
 		}
+	}
+
+
+	static function genInterface() {
+		var sbuf = new StringBuf();
+		var pack = Context.getLocalModule();
+		var unpack = pack.split(".");
+		var pathLength = unpack.length;
+		var _name = '${unpack[pathLength - 1]}';
+		var nHeader = pack.replace(".", "/");
+		var _package = unpack.slice(0, pathLength - 1).join("/");
+
+		var funcs:Array<String> = [];
+		var imports:Array<String> = [];
+
+		var fields:Array<Field> = Context.getBuildFields();
 	}
 }

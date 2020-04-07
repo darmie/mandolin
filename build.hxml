@@ -1,22 +1,14 @@
 -cp src/
--dce no
 
 co.zenturi.mandolin.react.ReactBuild
-co.zenturi.mandolin.xnative.JavascriptObject
-co.zenturi.mandolin.xnative.JavascriptType
-co.zenturi.mandolin.xnative.JavascriptCallback
-co.zenturi.mandolin.xnative.JavascriptPromise
-co.zenturi.mandolin.xnative.JobQueue
-co.zenturi.mandolin.xnative.JobDispatcher
-co.zenturi.mandolin.xnative.ReactBridge
-co.zenturi.mandolin.TestModule
-
-
--dce full
 
 --each 
 
 --interp
+
+--next 
+
+compile-react.hxml
 
 # --next
 
@@ -26,45 +18,3 @@ co.zenturi.mandolin.TestModule
 
 
 # -java bin/java/
-
-# --next
-
-# -cpp bin/Mandolin
-# -D -verbose
-# -D android 
-# -D static_link 
-# -D HXCPP_ARM64
-# # -D HXCPP_VERBOSE
-# -D PLATFORM=android-21
-
-# --next
-
-# -cpp bin/Mandolin
-# -D -verbose
-# -D android 
-# -D static_link 
-# -D HXCPP_ARMV7
-# # -D HXCPP_VERBOSE
-# -D PLATFORM=android-21
-
-
-# --next
-
-# -cpp bin/Mandolin
-# -D -verbose
-# -D android 
-# -D static_link 
-# -D HXCPP_X86
-# # -D HXCPP_VERBOSE
-# -D PLATFORM=android-21
-
-
-# --next
-
-# -cpp bin/Mandolin
-# -D -verbose
-# -D android 
-# -D static_link 
-# -D HXCPP_X86_64
-# # -D HXCPP_VERBOSE
-# -D PLATFORM=android-21

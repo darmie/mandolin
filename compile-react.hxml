@@ -1,0 +1,67 @@
+
+-cp /Volumes/Vibranium/Workspace/Zenturi/project/Mandolin/src/
+
+co.zenturi.mandolin.xnative.ReactBridge
+co.zenturi.mandolin.xnative.JobQueue
+co.zenturi.mandolin.xnative.Job
+co.zenturi.mandolin.xnative.JavascriptMap
+co.zenturi.mandolin.xnative.JavascriptCallback
+co.zenturi.mandolin.react.ReactBuild
+co.zenturi.mandolin.TestModule
+co.zenturi.mandolin.xnative.JavascriptArray
+co.zenturi.mandolin.xnative.JavascriptCallback
+co.zenturi.mandolin.xnative.JavascriptEvent
+co.zenturi.mandolin.xnative.JavascriptMap
+co.zenturi.mandolin.xnative.JavascriptMapKeyIterator
+co.zenturi.mandolin.xnative.JavascriptObject
+co.zenturi.mandolin.xnative.JavascriptPromise
+co.zenturi.mandolin.xnative.JavascriptType
+co.zenturi.mandolin.xnative.Job
+co.zenturi.mandolin.xnative.JobDispatcher
+co.zenturi.mandolin.xnative.JobQueue
+co.zenturi.mandolin.xnative.MandolinObject
+co.zenturi.mandolin.xnative.MandolinReact
+co.zenturi.mandolin.xnative.ReactBridge
+
+-dce full
+--each
+--interp
+
+--next
+
+-cpp bin/Mandolin
+-D -verbose
+-D android 
+-D static_link 
+-D HXCPP_ARM64
+-D PLATFORM=android-21
+            
+--next
+            
+-cpp bin/Mandolin
+-D -verbose
+-D android 
+-D static_link 
+-D HXCPP_ARMV7
+-D PLATFORM=android-21
+            
+            
+--next
+            
+-cpp bin/Mandolin
+-D -verbose
+-D android 
+-D static_link 
+-D HXCPP_X86
+-D PLATFORM=android-21
+            
+            
+--next
+            
+-cpp bin/Mandolin
+-D -verbose
+-D android 
+-D static_link 
+-D HXCPP_X86_64
+-D PLATFORM=android-21
+            
