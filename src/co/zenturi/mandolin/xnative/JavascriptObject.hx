@@ -58,26 +58,23 @@ class JavascriptObject {
 #end
 #elseif cpp 
 import haxe.io.FPHelper;
-@:headerCode("
-#include <co/zenturi/mandolin/xnative/JavascriptArray.h>
-#include <co/zenturi/mandolin/xnative/JavascriptType.h>
-#include <co/zenturi/mandolin/xnative/JavascriptMap.h>
+
+@:headerCode('
 #include <cstdint>
 #include <memory>
 #include <string>
-")
-@:headerNamespaceCode('
-namespace react {
+
+namespace mandolin_generated {
 
 class JavascriptArray;
 class JavascriptMap;
-// enum class JavascriptType;
+enum class JavascriptType;
 
 class JavascriptObject {
 public:
     virtual ~JavascriptObject() {}
 
-    virtual ::co::zenturi::mandolin::xnative::react::JavascriptType getType() = 0;
+    virtual JavascriptType getType() = 0;
 
     virtual bool isNull() = 0;
 
@@ -108,62 +105,62 @@ public:
     static std::shared_ptr<JavascriptObject> fromMap(const std::shared_ptr<JavascriptMap> & value);
 };
 
-class JavascriptObjectImpl : public ::co::zenturi::mandolin::xnative::react::JavascriptObject {
+class JavascriptObjectImpl : public JavascriptObject {
     public:
         JavascriptObjectImpl(const JavascriptObjectImpl& other) : mType(other.mType){
             switch (mType) {
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::ARRAY:
+                case JavascriptType::ARRAY:
                     new (&mUnion.mArray) std::shared_ptr<JavascriptArray>(other.mUnion.mArray);
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::MAP:
+                case JavascriptType::MAP:
                     new (&mUnion.mMap) std::shared_ptr<JavascriptMap>(other.mUnion.mMap);
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::BOOLEAN:
+                case JavascriptType::BOOLEAN:
                     mUnion.mBool = other.mUnion.mBool;
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::NUMBER:
+                case JavascriptType::NUMBER:
                     mUnion.mDouble = other.mUnion.mDouble;
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::STRING:
+                case JavascriptType::STRING:
                     new (&mUnion.mString) std::string(other.mUnion.mString);
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::NIL:
+                case JavascriptType::NIL:
                 default:
                     break;
             }
         }
     
-        JavascriptObjectImpl(std::nullptr_t): mType(::co::zenturi::mandolin::xnative::react::JavascriptType::NIL) {};
-        JavascriptObjectImpl(bool value) :  mType(::co::zenturi::mandolin::xnative::react::JavascriptType::BOOLEAN) {
+        JavascriptObjectImpl(std::nullptr_t): mType(JavascriptType::NIL) {};
+        JavascriptObjectImpl(bool value) :  mType(JavascriptType::BOOLEAN) {
             mUnion.mBool = value;
         };
-        JavascriptObjectImpl(double value) : mType(::co::zenturi::mandolin::xnative::react::JavascriptType::NUMBER) {
+        JavascriptObjectImpl(double value) : mType(JavascriptType::NUMBER) {
             mUnion.mDouble = value;
         }
         
-        JavascriptObjectImpl(int32_t value): mType(::co::zenturi::mandolin::xnative::react::JavascriptType::NUMBER) {
+        JavascriptObjectImpl(int32_t value): mType(JavascriptType::NUMBER) {
             mUnion.mDouble = value;
         }
-        JavascriptObjectImpl(const std::string& value) : mType(::co::zenturi::mandolin::xnative::react::JavascriptType::STRING) {
+        JavascriptObjectImpl(const std::string& value) : mType(JavascriptType::STRING) {
             new (&mUnion.mString) std::string(value);
         }
-        JavascriptObjectImpl(const std::shared_ptr<JavascriptArray>& value) : mType(::co::zenturi::mandolin::xnative::react::JavascriptType::ARRAY) {
+        JavascriptObjectImpl(const std::shared_ptr<JavascriptArray>& value) : mType(JavascriptType::ARRAY) {
             new (&mUnion.mArray) std::shared_ptr<JavascriptArray>(value);
         }
-        JavascriptObjectImpl(const std::shared_ptr<JavascriptMap>& value): mType(::co::zenturi::mandolin::xnative::react::JavascriptType::MAP) {
+        JavascriptObjectImpl(const std::shared_ptr<JavascriptMap>& value): mType(JavascriptType::MAP) {
             new (&mUnion.mMap) std::shared_ptr<JavascriptMap>(value);
         }
         
     
         ~JavascriptObjectImpl() {
             switch (mType) {
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::ARRAY:
+                case JavascriptType::ARRAY:
                     mUnion.mArray.reset();
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::MAP:
+                case JavascriptType::MAP:
                     mUnion.mMap.reset();
                     break;
-                case ::co::zenturi::mandolin::xnative::react::JavascriptType::STRING:
+                case JavascriptType::STRING:
                     mUnion.mString.~basic_string();
                     break;
                 default:
@@ -171,51 +168,51 @@ class JavascriptObjectImpl : public ::co::zenturi::mandolin::xnative::react::Jav
             }
         }
     
-        ::co::zenturi::mandolin::xnative::react::JavascriptType getType() override {
+        JavascriptType getType() override {
             return mType;
         }
     
         bool isNull() override {
-            return mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::NIL;
+            return mType == JavascriptType::NIL;
         }
     
         bool asBoolean() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::BOOLEAN) {
+            if (mType == JavascriptType::BOOLEAN) {
                 return mUnion.mBool;
             }
             return false;
         }
     
         double asDouble() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::NUMBER) {
+            if (mType == JavascriptType::NUMBER) {
                 return mUnion.mDouble;
             }
             return 0;
         }
     
         int32_t asInt() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::NUMBER) {
+            if (mType == JavascriptType::NUMBER) {
                 return (int32_t) mUnion.mDouble;
             }
             return 0;
         }
     
         std::string asString() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::STRING) {
+            if (mType == JavascriptType::STRING) {
                 return mUnion.mString;
             }
             return nullptr;
         }
     
         std::shared_ptr<JavascriptArray> asArray() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::ARRAY) {
+            if (mType == JavascriptType::ARRAY) {
                 return mUnion.mArray;
             }
             return nullptr;
         }
     
         std::shared_ptr<JavascriptMap> asMap() override {
-            if (mType == ::co::zenturi::mandolin::xnative::react::JavascriptType::MAP) {
+            if (mType == JavascriptType::MAP) {
                 return mUnion.mMap;
             }
             return nullptr;
@@ -231,11 +228,11 @@ class JavascriptObjectImpl : public ::co::zenturi::mandolin::xnative::react::Jav
             std::shared_ptr<JavascriptArray> mArray;
             std::shared_ptr<JavascriptMap> mMap;
         } mUnion;
-        ::co::zenturi::mandolin::xnative::react::JavascriptType mType;
+        JavascriptType mType;
     };
 }
 ')
 @:keep
-interface JavascriptObject {
+interface IJavascriptObject {
 }
 #end

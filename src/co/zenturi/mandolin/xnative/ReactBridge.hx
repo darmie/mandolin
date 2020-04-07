@@ -48,35 +48,5 @@ class ReactBridge {
     public function createJobDispatcher(queue:MandolinObject<JobQueue>):MandolinObject<JobDispatcher> {
         return new JobDispatcher(queue);
     }
-}
-
-#elseif cpp
-@:headerCode("
-#include <string>
-")
-@:headerNamespaceCode('
-namespace react {
-
-    class JavascriptArray;
-    class JavascriptMap;
-    class JavascriptArray;
-    class JobQueue;
-    class ReactBridge {
-        public:
-            ~ReactBridge(){};
-            virtual std::shared_ptr<JavascriptArray> createArray() = 0;
-            virtual std::shared_ptr<JavascriptMap> createMap()= 0;
-            virtual std::shared_ptr<JavascriptArray> copyArray(const std::shared_ptr<JavascriptArray> & a)= 0;
-            virtual std::shared_ptr<JavascriptMap> copyMap(const std::shared_ptr<JavascriptMap> & m)= 0;
-            virtual void emitEventWithMap(std::string name, const std::shared_ptr<JavascriptMap> params)= 0;
-            virtual void emitEventWithArray(std::string name, const std::shared_ptr<JavascriptArray> params)= 0;
-            virtual void createJobDispatcher(const std::shared_ptr<JobQueue> params)= 0;
-    };
-
-
-}
-')
-@:keep
-interface ReactBridge {
-}   
+} 
 #end

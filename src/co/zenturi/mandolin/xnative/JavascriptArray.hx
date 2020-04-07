@@ -133,38 +133,4 @@ class JavascriptArray {
     }
 
 }
-#elseif cpp 
-@:headerCode("
-#include <co/zenturi/mandolin/xnative/JavascriptMap.h>
-#include <co/zenturi/mandolin/xnative/JavascriptObject.h>
-#include <co/zenturi/mandolin/xnative/JavascriptType.h>
-")
-@:headerNamespaceCode('
-namespace react {
-    class JavascriptArray {
-        public:
-            ~JavascriptArray(){};
-            virtual int32_t size() = 0;
-            virtual bool isNull() = 0;
-            virtual double getDouble(const int32_t index) = 0;
-            virtual int32_t getInt(const int32_t index) = 0;
-            virtual std::shared_ptr<JavascriptArray> getArray(const int32_t index) = 0;
-            virtual std::shared_ptr<JavascriptMap> getMap(const int32_t index) = 0;
-            virtual std::shared_ptr<JavascriptObject> getObject(const int32_t index) = 0;
-            virtual ::co::zenturi::mandolin::xnative::JavascriptType getType(const int32_t index) = 0;
-
-            virtual void pushNull() = 0;
-            virtual void pushBoolean(bool value) = 0;
-            virtual void pushDouble(double value) = 0;
-            virtual void pushInt(int32_t value) = 0;
-            virtual void pushString(std::string value) = 0;
-            virtual void pushArray(const std::shared_ptr<JavascriptArray> & value) = 0;
-            virtual void pushMap(const std::shared_ptr<JavascriptMap> & value) = 0;
-    };
-}
-')
-@:keep
-interface JavascriptArray {
-   
-}
 #end

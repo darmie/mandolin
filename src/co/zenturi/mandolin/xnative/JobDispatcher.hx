@@ -36,22 +36,4 @@ class JobDispatcher {
         mQueue.get().interruptPoll();  
     }
 }
-
-#elseif cpp 
-@:headerNamespaceCode('
-namespace react {
-    class JobDispatcher {
-        public:
-            virtual ~JobDispatcher() {}
-        
-            virtual void start() = 0;
-        
-            virtual void quit() = 0;
-        };
-}
-')
-@:keep
-interface JobDispatcher {
-
-}
 #end

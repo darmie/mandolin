@@ -12,9 +12,9 @@ enum JavascriptType {
     MAP;
 }
 #elseif cpp 
-@:headerCode("#include <functional>")
-@:headerNamespaceCode('
-namespace react {
+@:headerCode('
+#include <functional>
+
 enum class JavascriptType : int {
     NIL,
     BOOLEAN,
@@ -24,24 +24,16 @@ enum class JavascriptType : int {
     MAP,
 };
 
-// namespace std {
+namespace std {
 
-// template <>
-// struct ::std::hash<::co::zenturi::mandolin::xnative::react::JavascriptType> {
-//     size_t operator()(::co::zenturi::mandolin::xnative::react::JavascriptType type) const {
-//         return ::std::hash<int>()(static_cast<int>(type));
-//     }
-// };
+template <>
+struct hash<JavascriptType> {
+    size_t operator()(JavascriptType type) const {
+        return ::std::hash<int>()(static_cast<int>(type));
+    }
 }
+} // namespace std
 ')
 @:keep
-class JavascriptType{}
-// enum JavascriptType {
-//     NIL;
-//     BOOLEAN;
-//     NUMBER;
-//     STRING;
-//     ARRAY;
-//     MAP;
-// }
+interface JavascriptType{}
 #end

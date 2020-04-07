@@ -135,40 +135,4 @@ class JavascriptMap {
 		return mWritableMap;
 	}
 }
-#elseif cpp
-@:headerCode("
-#include <co/zenturi/mandolin/xnative/JavascriptArray.h>
-#include <co/zenturi/mandolin/xnative/JavascriptObject.h>
-#include <co/zenturi/mandolin/xnative/JavascriptType.h>
-")
-@:headerNamespaceCode('
-namespace react {
-    class JavascriptMap {
-        public:
-            ~JavascriptMap(){};
-            virtual bool hasKey(const char * name) = 0;
-            virtual bool isNull(const char * name) = 0;
-            virtual double getDouble(const char * name) = 0;
-            virtual int32_t getInt(const char * name) = 0;
-            virtual std::shared_ptr<JavascriptArray> getArray(std::string name) = 0;
-            virtual std::shared_ptr<JavascriptMap> getMap(std::string name) = 0;
-            virtual std::shared_ptr<JavascriptObject> getObject(std::string name) = 0;
-            virtual ::co::zenturi::mandolin::xnative::JavascriptType getType(std::string name) = 0;
-
-            virtual void putNull(std::string key) = 0;
-            virtual void putBoolean(std::string key, bool value) = 0;
-            virtual void putDouble(std::string key, double value) = 0;
-            virtual void putInt(std::string key, int32_t value) = 0;
-            virtual void putString(std::string key, std::string value) = 0;
-            virtual void putArray(std::string key, const std::shared_ptr<JavascriptArray> & value) = 0;
-            virtual void putMap(std::string key, const std::shared_ptr<JavascriptMap> & value) = 0;
-            virtual void putObject(std::string key, const std::shared_ptr<JavascriptObject> & value) = 0;
-            virtual void merge(const std::shared_ptr<JavascriptMap> & value) = 0;
-            virtual void getReadableMap() = 0;
-            virtual void getWritableMap() = 0;
-    };
-}
-')
-@:keep
-interface JavascriptMap {}
 #end

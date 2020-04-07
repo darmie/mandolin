@@ -38,24 +38,4 @@ class JavascriptCallback {
         #end
     }
 }
-#elseif cpp 
-@:headerNamespaceCode('
-namespace react {
-#include <memory>
-#include <vector>
-
-class JavascriptObject;
-
-class JavascriptCallback {
-public:
-    virtual ~JavascriptCallback() {}
-
-    virtual void invoke(const std::vector<std::shared_ptr<JavascriptObject>> & args) = 0;
-
-    virtual void invokeSingleArg(const std::shared_ptr<JavascriptObject> & arg) = 0;
-};
-}
-')
-@:keep
-interface JavascriptCallback {}
 #end

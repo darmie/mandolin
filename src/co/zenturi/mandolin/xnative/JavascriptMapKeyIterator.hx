@@ -25,22 +25,4 @@ class JavascriptMapKeyIterator {
         return mReadableMapKeySetIterator.nextKey();
     }
 }
-#elseif cpp 
-@:headerNamespaceCode('
-namespace react {
-    #include <string>
-
-    class JavascriptMapKeyIterator {
-    public:
-        virtual ~JavascriptMapKeyIterator() {}
-    
-        virtual bool hasNextKey() = 0;
-    
-        virtual std::string nextKey() = 0;
-    };   
-}
-')
-@:keep
-interface JavascriptMapKeyIterator {
-}
 #end

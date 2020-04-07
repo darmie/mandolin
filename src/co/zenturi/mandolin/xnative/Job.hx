@@ -16,21 +16,20 @@ class Job {
 @:headerCode('
 #include <memory>
 #include <functional>
-')
-@:headerNamespaceCode('
-namespace react {
+
+namespace mandolin_generated {
     class Job {
         public:
             ~Job();
             virtual void run() = 0;
     };
 
-    class JobImpl : public ::co::zenturi::mandolin::xnative::react::Job {
+    class JobImpl : ::mandolin_generated::Job {
         public:
             JobImpl(std::function<void()> xfunc) : mFunc(xfunc) {
 
             }
-            static std::shared_ptr<Job> create(std::function<void()> xfunc) {
+            static std::shared_ptr<::mandolin_generated::Job> create(std::function<void()> xfunc) {
                 return std::make_shared<JobImpl>(xfunc);
             }
 
@@ -42,4 +41,5 @@ namespace react {
     };
 }
 ')
+interface Job{}
 #end

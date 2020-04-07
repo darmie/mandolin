@@ -9,8 +9,8 @@ using StringTools;
 
 class Builder {
 	public static var modules:Array<String> = [];
-    static var cppFiles:Array<String> = [];
-    static var hxFiles:Array<String> = [];
+	static var cppFiles:Array<String> = [];
+	static var hxFiles:Array<String> = [];
 
 	macro static function run():Array<Field> {
 		var clazz = Context.getLocalModule();
@@ -32,39 +32,35 @@ class Builder {
 		var _class = Context.getLocalClass();
 		var _pos = Context.currentPos();
 		var _pos_info = Context.getPosInfos(_pos);
-        _class.get().meta.add(":buildXml", [{expr: EConst(CString('${builder.toString()}')), pos: _pos}], _pos);
-        
+		_class.get().meta.add(":buildXml", [{expr: EConst(CString('${builder.toString()}')), pos: _pos}], _pos);
 
-        var xdir = '${Sys.getCwd()}src';
+		var xdir = '${Sys.getCwd()}src';
 
-        try{
-            recursiveLoop('${dir}');
-            var packages = new HxmlBuilder();
-            for(x in hxFiles){
-                var rex = ~/.*package.*/;
-                var exRex = ~/[^.]+$/;
-                var code = sys.io.File.getContent(x);
-                var packagePrefix = "";
-                
-                if(rex.match(code)){
-                    var packageName = rex.matched(0);
-                    packagePrefix = packageName.replace('package ', "").replace(';', '');
-                }
-                if(exRex.match(x)){
-                    var m = exRex.matchedLeft().split("/");
-                    var length = m.length;
-                    var fileName = (m[length - 1]).replace(".", "");
-                    if(packagePrefix != "co.zenturi.mandolin.macros"){
-                        packages.push('$packagePrefix.$fileName');
-                    }
-                }
-            }
-            
-        }catch(e:Dynamic){
-            throw "source path 'src/' no found in current working directory: Make sure your project Haxe files are in 'src' directory";
-        }
-        
+		try {
+			recursiveLoop('${dir}');
+			var packages = new HxmlBuilder();
+			for (x in hxFiles) {
+				var rex = ~/.*package.*/;
+				var exRex = ~/[^.]+$/;
+				var code = sys.io.File.getContent(x);
+				var packagePrefix = "";
 
+				if (rex.match(code)) {
+					var packageName = rex.matched(0);
+					packagePrefix = packageName.replace('package ', "").replace(';', '');
+				}
+				if (exRex.match(x)) {
+					var m = exRex.matchedLeft().split("/");
+					var length = m.length;
+					var fileName = (m[length - 1]).replace(".", "");
+					if (packagePrefix != "co.zenturi.mandolin.macros") {
+						packages.push('$packagePrefix.$fileName');
+					}
+				}
+			}
+		} catch (e:Dynamic) {
+			throw "source path 'src/' no found in current working directory: Make sure your project Haxe files are in 'src' directory";
+		}
 		return null;
 	}
 
@@ -79,9 +75,9 @@ class Builder {
 					if (re.match(path)) {
 						var ext = re.matched(0);
 						if (ext == "cpp")
-                            cppFiles.push(path);
-                        if(ext == "hx")
-                            hxFiles.push(path);
+							cppFiles.push(path);
+						if (ext == "hx")
+							hxFiles.push(path);
 					}
 					// do something with file
 				} else {
@@ -101,8 +97,14 @@ abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 		this = Builder.modules;
 	}
 
+	public inline function indexOf(x:String):Int {
+		return this.indexOf(x);
+	}
+
 	public inline function push(x:String) {
-		this.push(x);
+		if (this.indexOf(x) == -1) {
+			this.push(x);
+		}
 		var sbuf = new StringBuf();
 		sbuf.add('\n');
 		var dir = '${Sys.getCwd()}src/';
@@ -110,10 +112,11 @@ abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 			sbuf.add('-cp ${dir}\n\n');
 			for (module in this) {
 				sbuf.add('$module\n');
-            }
-            sbuf.add('\n-dce full\n--each\n--interp\n');
-            // cpp compile
-            sbuf.add('
+			}
+			sbuf.add('\n-dce full\n--each\n--interp\n');
+
+			// cpp compile
+			sbuf.add('
 --next
 
 -cpp bin/Mandolin
@@ -152,10 +155,10 @@ abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 -D HXCPP_X86_64
 -D PLATFORM=android-21
             ');
-            File.saveContent('${Sys.getCwd()}compile-react.hxml', sbuf.toString());
-		}else {
-            throw "source path 'src/' no found in current working directory: Make sure your project Haxe files are in 'src' directory";
-        } 
 
+			File.saveContent('${Sys.getCwd()}compile-react.hxml', sbuf.toString());
+		} else {
+			throw "source path 'src/' no found in current working directory: Make sure your project Haxe files are in 'src' directory";
+		}
 	}
 }

@@ -48,43 +48,4 @@ class JavascriptPromise {
         mPromise.reject(code, message);
     }
 }
-
-#elseif cpp 
-@:headerCode('
-#include <cstdint>
-#include <memory>
-#include <string>
-')
-@:headerNamespaceCode('
-namespace react{
-class JavascriptArray;
-class JavascriptMap;
-class JavascriptObject;
-
-class JavascriptPromise {
-public:
-    virtual ~JavascriptPromise() {}
-
-    virtual void resolveNull() = 0;
-
-    virtual void resolveBoolean(bool value) = 0;
-
-    virtual void resolveDouble(double value) = 0;
-
-    virtual void resolveInt(int32_t value) = 0;
-
-    virtual void resolveString(const std::string & value) = 0;
-
-    virtual void resolveArray(const std::shared_ptr<JavascriptArray> & value) = 0;
-
-    virtual void resolveMap(const std::shared_ptr<JavascriptMap> & value) = 0;
-
-    virtual void resolveObject(const std::shared_ptr<JavascriptObject> & value) = 0;
-
-    virtual void reject(const std::string & code, const std::string & message) = 0;
-};
-}
-')
-@:keep
-interface JavascriptPromise{}
 #end
