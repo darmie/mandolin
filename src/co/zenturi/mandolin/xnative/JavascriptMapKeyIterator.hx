@@ -1,5 +1,5 @@
 package co.zenturi.mandolin.xnative;
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 
 #if java
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -24,5 +24,26 @@ class JavascriptMapKeyIterator {
     public function nextKey():String {
         return mReadableMapKeySetIterator.nextKey();
     }
+}
+#elseif cpp
+@:headerCode('
+class JavascriptMapKeyIterator {
+    public:
+        virtual ~JavascriptMapKeyIterator() {}
+    
+        virtual bool hasNextKey() = 0;
+    
+        virtual std::string nextKey() = 0;
+};
+')
+@:keep
+interface IJavascriptMapKeyIterator {}
+@:native('std::shared_ptr<::JavascriptMapKeyIterator>')
+extern class JavascriptMapKeyIterator {
+    @:native('hasNextKey')
+    public function hasNextKey():Bool;
+
+    @:native('nextKey')
+    public function nextKey():Void;
 }
 #end

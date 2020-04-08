@@ -45,14 +45,14 @@ std::shared_ptr<JavascriptArray> NativeReactBridge::JavaProxy::copyArray(const s
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptArray:toCpp(jniEnv, ret);
 }
-void NativeReactBridge::JavaProxy::emitEventWithMap(const std::string name, const std::shared_ptr<JavascriptMap> & params) {
+void NativeReactBridge::JavaProxy::emitEventWithMap(const std::string & name, const std::shared_ptr<JavascriptMap> & params) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeReactBridge>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_emitEventWithMap, ::mandolin::String::fromCpp(jniEnv, name), , ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, params));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeReactBridge::JavaProxy::emitEventWithArray(const std::string name, const std::shared_ptr<JavascriptArray> & params) {
+void NativeReactBridge::JavaProxy::emitEventWithArray(const std::string & name, const std::shared_ptr<JavascriptArray> & params) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeReactBridge>::get();

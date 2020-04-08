@@ -35,6 +35,7 @@ class JNI {
 		var pack = Context.getLocalModule();
 		var unpack = pack.split(".");
 		var pathLength = unpack.length;
+		cppFiles = [];
 		var name = 'Native${unpack[pathLength - 1]}';
 		init(name);
 		return null;
@@ -85,8 +86,8 @@ class JNI {
 
 		constructJNIHeader('$classPath/$moduleName.hpp');
 
-		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/$moduleName.cpp') == -1) {
-			cppFiles.push('${dir}gen/cpp/$packPath/$moduleName.cpp');
+		if (cppFiles.indexOf('$classPath/$moduleName.cpp') == -1) {
+			cppFiles.push('$classPath/$moduleName.cpp');
 		}
 
 		var buildXml = new StringBuf();
@@ -162,7 +163,7 @@ class JNI {
 													case TPType(t): {
 															switch (t) {
 																case TPath(p): {
-																		argType = 'std::shared_ptr<${p.name}> &';  paramGetters.push('::mandolin_generated::Native${p.name}:fromCpp(jniEnv, $argName)');
+																		argType = 'const std::shared_ptr<${p.name}> &';  paramGetters.push('::mandolin_generated::Native${p.name}:fromCpp(jniEnv, $argName)');
 																	}
 																case _:
 															}
@@ -172,11 +173,16 @@ class JNI {
 											}
 										} else {
 											switch p.name {
-												case "String": argType = "std::string"; paramGetters.push('::mandolin::String::fromCpp(jniEnv, $argName)');
+												case "String": argType = "const std::string &"; paramGetters.push('::mandolin::String::fromCpp(jniEnv, $argName)');
 												case "Int" | "haxe.Int32": argType = "int32_t"; paramGetters.push('::mandolin::I32::fromCpp(jniEnv, $argName)');
 												case "Int64": argType = "int64_t"; paramGetters.push('::mandolin::I64::fromCpp(jniEnv, $argName)');
 												case "Float": argType = "double"; paramGetters.push('::mandolin::F64::fromCpp(jniEnv, $argName)');
 												case "Bool": argType = "bool"; paramGetters.push('::mandolin::Bool::fromCpp(jniEnv, $argName)');
+												case "JavascriptArray": argType = "const std::shared_ptr<JavascriptArray> &";
+												case "JavascriptMap": argType = "const std::shared_ptr<JavascriptMap> &";
+												case "JavascriptCallback": argType = "const std::shared_ptr<JavascriptCallback> &";
+												case "JavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &";
+												case "JavascriptType": argType = "::JavascriptType";
 												case "Array": {
 														var _type = "";
 														var getter = "";
@@ -223,7 +229,7 @@ class JNI {
 
 								case _:
 							}
-							params.push(['$argName', 'const $argType']);
+							params.push(['$argName', '$argType']);
 						}
 						var hasReturn = false;
 						var _type = "";
@@ -253,6 +259,11 @@ class JNI {
 												case "Float": _type = "double"; retGetters.push('::mandolin::F64:toCpp(jniEnv, ret)');
 												case "Void": _type = "void"; hasReturn = false; 
 												case "Bool": _type = "bool"; retGetters.push('::mandolin::Bool:toCpp(jniEnv, ret)');
+												case "JavascriptArray": _type = "std::shared_ptr<JavascriptArray>";
+												case "JavascriptMap": _type = "std::shared_ptr<JavascriptMap>";
+												case "JavascriptCallback": _type = "std::shared_ptr<JavascriptCallback>";
+												case "JavascriptObject": _type = "std::shared_ptr<::JavascriptObject>";
+												case "JavascriptType": _type = "::JavascriptType";
 												case "Array": {
 													var xtype = "";
 													var rtype = "";
@@ -352,11 +363,12 @@ class JNI {
 			case "Int" | "haxe.Int32": "jint";
 			case "Int64": "jlong";
 			case "Float": "jdouble";
-			case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "Callback": "::mandolin_generated::NativeJavascriptCallback::JniType";
-			case "Map": "::mandolin_generated::NativeJavascriptMap::JniType";
-			case "Array": "::mandolin_generated::NativeJavascriptArray::JniType";
-			case "Promise": "::mandolin_generated::NativeJavascriptPromise::JniType";
+			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
+			case "JavascriptCallback": "::mandolin_generated::NativeJavascriptCallback::JniType";
+			case "JavascriptMap": "::mandolin_generated::NativeJavascriptMap::JniType";
+			case "JavascriptArray": "::mandolin_generated::NativeJavascriptArray::JniType";
+			case "JavascriptPromise": "::mandolin_generated::NativeJavascriptPromise::JniType";
+			case "JavascriptType": "jint";
 			case _: throw "Type not supported";
 		}
 	}
@@ -368,10 +380,11 @@ class JNI {
 			case "Int64": "int64_t";
 			case "Float": "double";
 			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "Callback": "std::shared_ptr<::JavascriptCallback> &";
-			case "Map": "std::shared_ptr<::JavascriptMap> &";
-			case "Array": "std::shared_ptr<::JavascriptArray> &";
-			case "Promise": "std::shared_ptr<::JavascriptPromise> &";
+			case "JavascriptCallback": "std::shared_ptr<::JavascriptCallback> &";
+			case "JavascriptMap": "std::shared_ptr<::JavascriptMap> &";
+			case "JavascriptArray": "std::shared_ptr<::JavascriptArray> &";
+			case "JavascriptPromise": "std::shared_ptr<::JavascriptPromise> &";
+			case "JavascriptType": "::JavascriptObjectType";
 			case _: throw "Type not supported";
 		}
 	}
@@ -382,11 +395,13 @@ class JNI {
 			case "Int" | "haxe.Int32": "int32_t";
 			case "Int64": "int64_t";
 			case "Float": "double";
+			case "Bool": "bool";
 			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "Callback": "std::shared_ptr<::JavascriptCallback>";
-			case "Map": "std::shared_ptr<::JavascriptMap>";
-			case "Array": "std::shared_ptr<::JavascriptArray>";
-			case "Promise": "std::shared_ptr<::JavascriptPromise>";
+			case "JavascriptCallback": "std::shared_ptr<::JavascriptCallback>";
+			case "JavascriptMap": "std::shared_ptr<::JavascriptMap>";
+			case "JavascriptArray": "std::shared_ptr<::JavascriptArray>";
+			case "JavascriptPromise": "std::shared_ptr<::JavascriptPromise>";
+			case "JavascriptType": "::JavascriptObjectType";
 			case _: throw "Type not supported";
 		}
 	}
@@ -451,7 +466,7 @@ class JNI {
 															switch (t) {
 																case TPath(p): {
 																		impName = '#include <co/zenturi/mandolin/xnative/${p.name}.h>\n';
-																		argType = 'std::shared_ptr<${p.name}>';
+																		argType = 'const std::shared_ptr<${p.name}> &';
 																	}
 																case _:
 															}
@@ -461,11 +476,17 @@ class JNI {
 											}
 										} else {
 											switch p.name {
-												case "String": argType = "std::string";
+												case "String": argType = "const std::string &";
 												case "Int" | "haxe.Int32": argType = "int32_t";
 												case "Int64": argType = "int64_t";
 												case "Float": argType = "double";
 												case "Bool": argType = "bool";
+												case "JavascriptCallback": argType = "const std::shared_ptr<::JavascriptCallback> &";
+												case "JavascriptMap": argType = "const std::shared_ptr<::JavascriptMap> &";
+												case "JavascriptArray": argType = "const std::shared_ptr<::JavascriptArray> &";
+												case "JavascriptPromise": argType = "const std::shared_ptr<::JavascriptPromise> &";
+												case "JavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &";
+												case "JavascriptType": argType = "::JavascriptType";
 												case "Array": {
 													var _type = "";
 													var rec:Void->String = () -> "";
@@ -477,13 +498,13 @@ class JNI {
 																		switch (t) {
 																			case TPath(p): {
 																					switch p.name {
-																						case "String": _type = 'std::vector<string> &';
-																						case "Int": _type = 'std::vector<int32_t> &';
-																						case "Int64": _type = 'std::vector<int64_t> &';
-																						case "Float": _type = 'std::vector<double> &';
-																						case "Bool": _type = 'std::vector<bool> &';
-																						case "Array": _type = 'std::vector<${rec()}> &';
-																						case _: _type = 'std::vector< std::shared_ptr<${p.name}> > &';
+																						case "String": _type = 'const std::vector<string> &';
+																						case "Int": _type = 'const std::vector<int32_t> &';
+																						case "Int64": _type = 'const std::vector<int64_t> &';
+																						case "Float": _type = 'const std::vector<double> &';
+																						case "Bool": _type = 'const std::vector<bool> &';
+																						case "Array": _type = 'const std::vector<${rec()}> &';
+																						case _: _type = 'const std::vector< std::shared_ptr<${p.name}> > &';
 																					}
 																				}
 																			case _:
@@ -504,8 +525,9 @@ class JNI {
 									}
 								case _:
 							}
+							
 							// argType = getCppTypes(argType);
-							params.push(['$argName', 'const $argType']);
+							params.push(['$argName', '$argType']);
 
 							if (imports.indexOf(impName) == -1) {
 								imports.push(impName);
@@ -540,6 +562,12 @@ class JNI {
 												case "Float": _type = "double";
 												case "Void": _type = "void";
 												case "Bool": _type = "bool";
+												case "JavascriptCallback": _type =  "std::shared_ptr<::JavascriptCallback>";
+												case "JavascriptMap": _type = "std::shared_ptr<::JavascriptMap>";
+												case "JavascriptArray": _type ="std::shared_ptr<::JavascriptArray>";
+												case "JavascriptPromise": _type = "std::shared_ptr<::JavascriptPromise>";
+												case "JavascriptObject": _type = "std::shared_ptr<::JavascriptObject>";
+												case "JavascriptType": _type = "::JavascriptType";
 												case "Array": {
 													var xtype = "";
 													var rec:Void->String = () -> "";
@@ -603,8 +631,8 @@ class JNI {
 		sbuf.add("// AUTOGENERATED FILE - DO NOT MODIFY!\n");
 		sbuf.add("// This file is generated by Mandolin - (c) Zenturi.co\n\n");
 		sbuf.add("#pragma once\n\n");
-		// sbuf.add('#include <$_package/$_name.hpp>\n\n');
-		sbuf.add('#include "$_name.hpp"\n\n');
+		sbuf.add('#include <$_package/I$_name.h>\n\n');
+		// sbuf.add('#include "$_name.hpp"\n\n');
 		sbuf.add('#include <mandolin_helpers.h>\n\n');
 		sbuf.add("namespace mandolin_generated {\n\n");
 		sbuf.add('class $moduleName final : ::mandolin::JniInterface<::$_name, $moduleName> {\n');

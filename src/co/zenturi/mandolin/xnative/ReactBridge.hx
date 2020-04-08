@@ -1,7 +1,7 @@
 package co.zenturi.mandolin.xnative;
 
 
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 #if java
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
@@ -49,4 +49,59 @@ class ReactBridge {
         return new JobDispatcher(queue);
     }
 } 
+#elseif cpp
+@:headerCode('
+#include <memory>
+#include <string>
+
+class JavascriptArray;
+class JavascriptMap;
+class JobDispatcher;
+class JobQueue;
+
+class ReactBridge {
+public:
+    virtual ~ReactBridge() {}
+
+    virtual std::shared_ptr<JavascriptMap> createMap() = 0;
+
+    virtual std::shared_ptr<JavascriptArray> createArray() = 0;
+
+    virtual std::shared_ptr<JavascriptMap> copyMap(const std::shared_ptr<JavascriptMap> & map) = 0;
+
+    virtual std::shared_ptr<JavascriptArray> copyArray(const std::shared_ptr<JavascriptArray> & array) = 0;
+
+    virtual void emitEventWithMap(const std::string & name, const std::shared_ptr<JavascriptMap> & params) = 0;
+
+    virtual void emitEventWithArray(const std::string & name, const std::shared_ptr<JavascriptArray> & params) = 0;
+
+    virtual std::shared_ptr<JobDispatcher> createJobDispatcher(const std::shared_ptr<JobQueue> & queue) = 0;
+};
+')
+@:keep
+interface IReactBridge{}
+@:include('co/zenturi/mandolin/xnative/IReactBridge.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptArray.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptMap.h')
+@:include('co/zenturi/mandolin/xnative/IJobQueue.h')
+@:native('std::shared_ptr<::ReactBridge>')
+extern class ReactBridge {
+    public static inline function init():ReactBridge {
+        return untyped __cpp__('std::make_shared<::ReactBridge>()');
+    }
+    @:native('createMap')
+    public function createMap():JavascriptMap;
+    @:native('createArray')
+    public function createArray():JavascriptMap;
+    @:native('copyMap')
+    public function copyMap(m:JavascriptMap):Void;
+    @:native('copyArray')
+    public function copyArray(a:JavascriptArray):Void;
+    @:native('emitEventWithMap')
+    public function emitEventWithMap(name:String, params:JavascriptMap):Void;
+    @:native('emitEventWithArray')
+    public function emitEventWithArray(name:String, params:JavascriptArray):Void;
+    @:native('createJobDispatcher')
+    public function createJobDispatcher(queue:JobQueue):Void;
+}
 #end

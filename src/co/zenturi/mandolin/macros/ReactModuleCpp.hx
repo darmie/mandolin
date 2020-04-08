@@ -70,33 +70,30 @@ class ReactModuleCpp {
 
 		constructJNIHeader('$classPath/$moduleName.hpp');
 
-		if(withImpl){
+		if (withImpl) {
 			constructImplHeader('$classPath/$_name.hpp');
 		}
-	
 
-		if(cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$moduleName.cpp') == -1){
+		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$moduleName.cpp') == -1) {
 			cppFiles.push('${dir}gen/cpp/$packPath/react/$moduleName.cpp');
 		}
 
-		if(cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$_name.hpp') == -1){
+		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$_name.hpp') == -1) {
 			cppFiles.push('${dir}gen/cpp/$packPath/react/$_name.hpp');
 		}
-		
-		
+
 		var buildXml = new StringBuf();
 		buildXml.add("<files id='haxe'>\n");
 		buildXml.add('<compilerflag value="-I$classPath"/>\n');
-		for(cp in cppFiles){
+		for (cp in cppFiles) {
 			buildXml.add('<file name="$cp" />\n');
 		}
 		buildXml.add("</files>\n");
 
 		var _class = Context.getLocalClass();
-		var _pos =  Context.currentPos();
-        var _pos_info = Context.getPosInfos(_pos);
-		_class.get().meta.add(":buildXml", [{ expr:EConst( CString( '${buildXml.toString()}' ) ), pos:_pos }], _pos );
-
+		var _pos = Context.currentPos();
+		var _pos_info = Context.getPosInfos(_pos);
+		_class.get().meta.add(":buildXml", [{expr: EConst(CString('${buildXml.toString()}')), pos: _pos}], _pos);
 	}
 
 	static function constructJNINamespace(name:String) {
@@ -129,7 +126,7 @@ class ReactModuleCpp {
 		sbuf.add('\t}\n\n');
 
 		// create
-		sbuf.add('\tCJNIEXPORT object JNICALL Java_${_package.replace("/", "_")}_react_${_name}_create(JNIEnv* jniEnv, jobject /*this*/, ::mandolin_generated::NativeReactBridge::JniType j_bridge) {\n');
+		sbuf.add('\tCJNIEXPORT jobject JNICALL Java_${_package.replace("/", "_")}_react_${_name}_create(JNIEnv* jniEnv, jobject /*this*/, ::mandolin_generated::NativeReactBridge::JniType j_bridge) {\n');
 		sbuf.add('\t\ttry {\n');
 		sbuf.add('\t\t\tDJINNI_FUNCTION_PROLOGUE0(jniEnv);\n');
 		sbuf.add('\t\t\tauto r = ::$_name::create(::mandolin_generated::NativeReactBridge::toCpp(jniEnv, j_bridge));\n');
@@ -186,9 +183,11 @@ class ReactModuleCpp {
 
 						// function body
 						sbuf.add('\t\ttry {\n');
-						sbuf.add('\t\t\tMANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);\n');
+						sbuf.add('\t\t\tDJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);\n');
 						sbuf.add('\t\t\tconst auto& ref = ::mandolin::objectFromHandleAddress<::$_name>(nativeRef);\n');
-						sbuf.add('\t\t\tref->$fname(');
+						
+						if(fname == "new") sbuf.add('\t\t\tref->__new(');
+						else sbuf.add('\t\t\tref->$fname(');
 
 						for (i in 0...params.length) {
 							var param = params[i];
@@ -218,26 +217,28 @@ class ReactModuleCpp {
 			case "Int" | "haxe.Int32": "jint";
 			case "Int64": "jlong";
 			case "Float": "jdouble";
-			case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "Callback": "::mandolin_generated::NativeJavascriptCallback::JniType";
-			case "Map": "::mandolin_generated::NativeJavascriptMap::JniType";
-			case "Array": "::mandolin_generated::NativeJavascriptArray::JniType";
-			case "Promise": "::mandolin_generated::NativeJavascriptPromise::JniType";
+			case "Bool": "jbool";
+			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
+			case "JavascriptCallback": "::mandolin_generated::NativeJavascriptCallback::JniType";
+			case "JavascriptMap": "::mandolin_generated::NativeJavascriptMap::JniType";
+			case "JavascriptArray": "::mandolin_generated::NativeJavascriptArray::JniType";
+			case "JavascriptPromise": "::mandolin_generated::NativeJavascriptPromise::JniType";
 			case _: throw "Type not supported";
 		}
 	}
 
 	static function getCppTypes(type:String) {
 		return switch type {
-			case "String": "string";
+			case "String": "std::string";
 			case "Int" | "haxe.Int32": "int32_t";
 			case "Int64": "int64_t";
 			case "Float": "double";
+			case "Bool": "bool";
 			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "Callback": "std::shared_ptr<::JavascriptCallback> &";
-			case "Map": "std::shared_ptr<::JavascriptMap> &";
-			case "Array": "std::shared_ptr<::JavascriptArray> &";
-			case "Promise": "std::shared_ptr<::JavascriptPromise> &";
+			case "JavascriptCallback": "std::shared_ptr<::JavascriptCallback> &";
+			case "JavascriptMap": "std::shared_ptr<::JavascriptMap> &";
+			case "JavascriptArray": "std::shared_ptr<::JavascriptArray> &";
+			case "JavascriptPromise": "std::shared_ptr<::JavascriptPromise> &";
 			case _: throw "Type not supported";
 		}
 	}
@@ -248,6 +249,7 @@ class ReactModuleCpp {
 			case "jint" | "haxe.Int32": '::mandolin::I32::toCpp(jniEnv, $arg)';
 			case "jlong": '::mandolin::I64::toCpp(jniEnv, $arg)';
 			case "jdouble": '::mandolin::F64::toCpp(jniEnv, $arg)';
+			case "jbool": '::mandolin::Bool::toCpp(jniEnv, $arg)';
 			case "::mandolin_generated::NativeJavascriptEvent::JniType": '::mandolin_generated::NativeJavascriptEvent::toCpp(jniEnv, $arg)';
 			case "::mandolin_generated::NativeJavascriptCallback::JniType": '::mandolin_generated::NativeJavascriptCallback::toCpp(jniEnv, $arg)';
 			case "::mandolin_generated::NativeJavascriptMap::JniType": '::mandolin_generated::NativeJavascriptMap::toCpp(jniEnv, $arg)';
@@ -266,6 +268,61 @@ class ReactModuleCpp {
 		var nHeader = pack.replace(".", "/");
 		var _package = unpack.slice(0, pathLength - 1).join("/");
 
+		var imports:Array<String> = [];
+
+		var fields:Array<Field> = Context.getBuildFields();
+
+		for (field in fields) {
+			switch (field.kind) {
+				case FFun(f):
+					{
+						var impName = "";
+						var params = [];
+						for (arg in f.args) {
+							var argName = arg.name;
+							var argType = null;
+
+							switch arg.type {
+								case TPath(p): {
+										argType = p.name;
+										switch p.name {
+											case "JavascriptMap": impName = '#include "NativeJavascriptMap.hpp"\n';
+											case "JavascriptArray": impName = '#include "NativeJavascriptArray.hpp"\n';
+											case "JavascriptCallback": impName = '#include "NativeJavascriptCallback.hpp"\n';
+											case _:
+										}
+									}
+								case _:
+							}
+						}
+
+						if (imports.indexOf(impName) == -1) {
+							imports.push(impName);
+						}
+
+					if (f.ret != null) {
+						switch f.ret {
+							case TPath(p): {
+									switch p.name {
+										case "Void":
+										case _: {
+												impName = '#include <NativeJavascriptPromise.hpp>\n';
+
+												if (imports.indexOf(impName) == -1) {
+													imports.push(impName);
+												}
+											}
+									}
+									
+								}
+							case _:
+						}
+					}
+				}
+				case _:
+			}
+		}
+
 		sbuf.add("// AUTOGENERATED FILE - DO NOT MODIFY!\n");
 		sbuf.add("// This file is generated by Mandolin - (c) Zenturi.co\n\n");
 
@@ -274,6 +331,10 @@ class ReactModuleCpp {
 		// sbuf.add('#include <$_package/react/$_name.hpp>\n\n');
 		sbuf.add('#include "$_name.hpp"\n\n');
 		sbuf.add('#include <mandolin_helpers.h>\n\n');
+		sbuf.add('#include <NativeReactBridge.hpp>\n\n');
+		for (imp in imports) {
+			sbuf.add(imp);
+		}
 
 		sbuf.add("namespace mandolin_generated {\n\n");
 		sbuf.add('class $moduleName final : ::mandolin::JniInterface<::$_name, $moduleName> {\n');
@@ -283,14 +344,14 @@ class ReactModuleCpp {
 		sbuf.add('\tusing CppOptType = std::shared_ptr<::$_name>;\n');
 		sbuf.add('\tusing JniType = jobject;\n');
 		sbuf.add('\tusing Boxed = $moduleName;\n\n');
-		sbuf.add('\t~$moduleName(){};\n\n');
+		sbuf.add('\t~$moduleName();\n\n');
 
 		sbuf.add('\tstatic CppType toCpp(JNIEnv* jniEnv, JniType j) { return ::mandolin::JniClass<$moduleName>::get()._fromJava(jniEnv, j); }\n');
 		sbuf.add('\tstatic ::mandolin::LocalRef<JniType> fromCppOpt(JNIEnv* jniEnv, const CppOptType& c) { return {jniEnv, ::mandolin::JniClass<$moduleName>::get()._toJava(jniEnv, c)}; }\n');
 		sbuf.add('\tstatic ::mandolin::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c) { return fromCppOpt(jniEnv, c); }\n\n');
 
 		sbuf.add('private:\n');
-		sbuf.add('\t$moduleName(){};\n');
+		sbuf.add('\t$moduleName();\n');
 		sbuf.add('\tfriend ::mandolin::JniClass<$moduleName>;\n');
 		sbuf.add('\tfriend ::mandolin::JniInterface<::$_name, $moduleName>;\n\n');
 
@@ -311,15 +372,17 @@ class ReactModuleCpp {
 
 		var funcs:Array<String> = [];
 		var imports:Array<String> = [];
+		var imports2:Array<String> = [];
 
 		// Fields
 		var fields:Array<Field> = Context.getBuildFields();
-
+		var containsPromise = false;
 		for (field in fields) {
 			switch (field.kind) {
 				case FFun(f):
 					{
 						var impName = "";
+						var impName2 = "";
 						var re = ~/([-_][a-z])/;
 						var fname = field.name;
 						if (re.match(field.name)) {
@@ -327,6 +390,7 @@ class ReactModuleCpp {
 								fname = re.replace(field.name, re.matched(i).toUpperCase()).replace("_", "").replace("-", "");
 							}
 						}
+						var hasCallback = false;
 						var params = [];
 						for (arg in f.args) {
 							var argName = arg.name;
@@ -335,38 +399,67 @@ class ReactModuleCpp {
 								case TPath(p): {
 										argType = p.name;
 										switch p.name {
-											case "Map": impName = '#include <co/zenturi/mandolin/xnative/JavascriptMap.h>\n';
-											case "Array": impName = '#include <co/zenturi/mandolin/xnative/JavascriptArray.h>\n';
+											case "JavascriptMap":
+												impName = 'class JavascriptMap;\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptMap.h>\n';
+											case "JavascriptArray":
+												impName = 'class JavascriptArray;\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptArray.h>\n';
+											case "JavascriptCallback":
+												impName = 'class JavascriptCallback;\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptCallback.h>\n';
 											case _:
 										}
-										
 									}
-								case TFunction(args, ret): {
-										argType = "Callback";
-										impName = '#include <co/zenturi/mandolin/xnative/JavascriptCallback.h>\n';
-									}
+								// case TFunction(args, ret): {
+								// 		argType = "Callback";
+								// 		hasCallback = true;
+								// 		impName = 'class JavascriptCallback;\n';
+								// 	}
 								case _:
 							}
 							argType = getCppTypes(argType);
 							params.push(['$argName', 'const $argType']);
 
-							if(imports.indexOf(impName) == -1){
+							if (imports.indexOf(impName) == -1) {
 								imports.push(impName);
+							}
+
+							if (imports2.indexOf(impName2) == -1) {
+								imports2.push(impName2);
 							}
 						}
 						var hasPromise = false;
-						if (f.ret != null) {
-							var _type = "const std::shared_ptr<::JavascriptPromise>";
-							impName = '#include <co/zenturi/mandolin/xnative/JavascriptPromise.h>\n';
-							params.push(['&promise', _type]);
-							hasPromise = true;
 
-							if(imports.indexOf(impName) == -1){
-								imports.push(impName);
+						if (f.ret != null) {
+							switch f.ret {
+								case TPath(p): {
+										switch p.name {
+											case "Void":
+											case _: {
+													var _type = "const std::shared_ptr<::JavascriptPromise>";
+													impName = 'class JavascriptPromise;\n';
+													impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptPromise.h>\n';
+													params.push(['&promise', _type]);
+													hasPromise = true;
+
+													if (imports.indexOf(impName) == -1) {
+														imports.push(impName);
+													}
+
+													if (imports2.indexOf(impName2) == -1) {
+														imports2.push(impName2);
+													}
+												}
+										}
+									}
+								case _:
 							}
 						}
-
-						funcs.push('\tvoid $fname(');
+						if (fname == 'new')
+							funcs.push('\tvoid __$fname(');
+						else
+							funcs.push('\tvoid $fname(');
 						// if (params.length > 0)
 						// 	funcs.push(', ');
 						for (i in 0...params.length) {
@@ -379,55 +472,68 @@ class ReactModuleCpp {
 							}
 						}
 						funcs.push(') {\n');
-						
-						if(fname == 'new'){
+
+						if (fname == 'new') {
 							funcs.push('\t\tthis->ref = ${_package.replace("/", "::")}::${_name}_obj::');
 							funcs.push('__new');
 						} else {
-							if(hasPromise) funcs.push('\t\tauto ret = ');
-							else funcs.push('\t\t');
+							if (hasPromise)
+								funcs.push('\t\tauto ret = ');
+							else
+								funcs.push('\t\t');
 							funcs.push('ref->');
-							funcs.push('$fname');
+							funcs.push('${field.name}');
 						}
 						funcs.push('(');
-						
+
 						for (i in 0...params.length) {
 							var param = params[i];
 							var pname = param[0];
 							var ptype = param[1];
-							if(ptype != "const std::shared_ptr<::JavascriptPromise>"){
-								funcs.push('$pname');
-							} 
+							if (ptype != "const std::shared_ptr<::JavascriptPromise>") {
+								if (ptype != "const std::shared_ptr<::JavascriptCallback> &") {
+									// funcs.push('(::JavascriptObjectImpl($pname)).asHaxeObject()');
+									switch ptype {
+										case 'const std::string': funcs.push('$pname.c_str()');
+										// case 'std::shared_ptr<::JavascriptArray> &':
+										case _: funcs.push(pname);
+									}
+								} else {
+									funcs.push('$pname');
+								}
+
+								// params.pop();
+							}
 
 							if (i < params.length - 2) {
 								funcs.push(', ');
 							}
 						}
 						funcs.push(');\n');
-						if(hasPromise){
+						if (hasPromise) {
 							funcs.push('\t\tpromise->');
 							var returnType = f.ret;
 							switch returnType {
-								case TPath(p):{
-									switch p.name {
-										case "String": funcs.push('resolveString(ret);\n');
-										case "Int" | "haxe.Int32": funcs.push('resolveInt(ret);\n');
-										case "haxe.Int64" | "Float": funcs.push('resolveDouble(ret);\n');
-										case "Map": funcs.push('resolveMap(::JavascriptObject::fromHaxe(ret));\n');
-										case "Array": funcs.push('resolveArray(::JavascriptObject::fromHaxe(ret));\n');
-										default: funcs.push('resolveNull();\n');
+								case TPath(p): {
+										switch p.name {
+											case "String": funcs.push('resolveString(::JavascriptObject::fromHaxe(ret)->asString());\n');
+											case "Int" | "haxe.Int32": funcs.push('resolveInt(::JavascriptObject::fromHaxe(ret)->asInt());\n');
+											case "haxe.Int64" | "Float": funcs.push('resolveDouble(::JavascriptObject::fromHaxe(ret)->asDouble());\n');
+											case "JavascriptMap": funcs.push('resolveMap(ret);\n');
+											case "JavascriptArray": funcs.push('resolveArray(ret);\n');
+											default: funcs.push('resolveNull();\n');
+										}
 									}
-								}
-								case _: 
+								case _:
 							}
-							
 						}
+
 						funcs.push('\t}\n');
+						containsPromise = hasPromise;
 					}
 				case _:
 			}
 		}
-
 
 		sbuf.add("// AUTOGENERATED FILE - DO NOT MODIFY!\n");
 		sbuf.add("// This file is generated by Mandolin - (c) Zenturi.co\n\n");
@@ -436,14 +542,25 @@ class ReactModuleCpp {
 		sbuf.add("#include <memory>\n");
 		sbuf.add("#include <string>\n");
 		sbuf.add('#include <$nHeader.h>\n');
-		sbuf.add('#include <$_package/xnative/ReactBridge.h>\n\n');
+		sbuf.add('#include <JavascriptObjectImpl.hpp>\n');
+		// sbuf.add('#include <$_package/xnative/ReactBridge.h>\n\n');
+		for (imp in imports2) {
+			sbuf.add(imp);
+		}
+
+		sbuf.add('\n\n');
+
+		// sbuf.add("namespace mandolin_generated {\n\n");
+		sbuf.add('class ReactBridge;\n');
+		if (containsPromise) {
+			sbuf.add('class JobQueueImpl;\n');
+			sbuf.add('class JobDispatcher;\n');
+		}
 
 		for (imp in imports) {
 			sbuf.add(imp);
 		}
 		sbuf.add('\n\n');
-
-		sbuf.add("namespace mandolin_generated {\n\n");
 
 		sbuf.add('class $_name  {\n');
 
@@ -461,9 +578,14 @@ class ReactModuleCpp {
 			sbuf.add(func);
 		}
 
+		sbuf.add('private:\n');
+		sbuf.add('\tstd::shared_ptr<ReactBridge> mBridge;');
+		sbuf.add('\tstd::shared_ptr<JobQueueImpl> mQueue;');
+		sbuf.add('\tstd::shared_ptr<JobDispatcher> mDispatcher;');
+
 		sbuf.add('}; // class $_name\n\n');
 
-		sbuf.add("} // namespace mandolin_generated \n");
+		// sbuf.add("} // namespace mandolin_generated \n");
 
 		File.saveContent(name, sbuf.toString());
 	}

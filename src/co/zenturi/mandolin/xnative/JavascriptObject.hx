@@ -1,6 +1,6 @@
 package co.zenturi.mandolin.xnative;
 
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 @:build(co.zenturi.mandolin.macros.JNI.bind())
 @:keep
 #if java
@@ -63,8 +63,10 @@ import haxe.io.FPHelper;
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <co/zenturi/mandolin/xnative/IJavascriptType.h>
+#include <hxcpp.h>
 
-namespace mandolin_generated {
+
 
 class JavascriptArray;
 class JavascriptMap;
@@ -102,137 +104,72 @@ public:
 
     virtual std::shared_ptr<JavascriptMap> asMap() = 0;
 
-    static std::shared_ptr<JavascriptObject> fromMap(const std::shared_ptr<JavascriptMap> & value);
-};
+    virtual ::Dynamic asHaxeObject() = 0;
 
-class JavascriptObjectImpl : public JavascriptObject {
-    public:
-        JavascriptObjectImpl(const JavascriptObjectImpl& other) : mType(other.mType){
-            switch (mType) {
-                case JavascriptType::ARRAY:
-                    new (&mUnion.mArray) std::shared_ptr<JavascriptArray>(other.mUnion.mArray);
-                    break;
-                case JavascriptType::MAP:
-                    new (&mUnion.mMap) std::shared_ptr<JavascriptMap>(other.mUnion.mMap);
-                    break;
-                case JavascriptType::BOOLEAN:
-                    mUnion.mBool = other.mUnion.mBool;
-                    break;
-                case JavascriptType::NUMBER:
-                    mUnion.mDouble = other.mUnion.mDouble;
-                    break;
-                case JavascriptType::STRING:
-                    new (&mUnion.mString) std::string(other.mUnion.mString);
-                    break;
-                case JavascriptType::NIL:
-                default:
-                    break;
-            }
-        }
-    
-        JavascriptObjectImpl(std::nullptr_t): mType(JavascriptType::NIL) {};
-        JavascriptObjectImpl(bool value) :  mType(JavascriptType::BOOLEAN) {
-            mUnion.mBool = value;
-        };
-        JavascriptObjectImpl(double value) : mType(JavascriptType::NUMBER) {
-            mUnion.mDouble = value;
-        }
-        
-        JavascriptObjectImpl(int32_t value): mType(JavascriptType::NUMBER) {
-            mUnion.mDouble = value;
-        }
-        JavascriptObjectImpl(const std::string& value) : mType(JavascriptType::STRING) {
-            new (&mUnion.mString) std::string(value);
-        }
-        JavascriptObjectImpl(const std::shared_ptr<JavascriptArray>& value) : mType(JavascriptType::ARRAY) {
-            new (&mUnion.mArray) std::shared_ptr<JavascriptArray>(value);
-        }
-        JavascriptObjectImpl(const std::shared_ptr<JavascriptMap>& value): mType(JavascriptType::MAP) {
-            new (&mUnion.mMap) std::shared_ptr<JavascriptMap>(value);
-        }
-        
-    
-        ~JavascriptObjectImpl() {
-            switch (mType) {
-                case JavascriptType::ARRAY:
-                    mUnion.mArray.reset();
-                    break;
-                case JavascriptType::MAP:
-                    mUnion.mMap.reset();
-                    break;
-                case JavascriptType::STRING:
-                    mUnion.mString.~basic_string();
-                    break;
-                default:
-                    break;
-            }
-        }
-    
-        JavascriptType getType() override {
-            return mType;
-        }
-    
-        bool isNull() override {
-            return mType == JavascriptType::NIL;
-        }
-    
-        bool asBoolean() override {
-            if (mType == JavascriptType::BOOLEAN) {
-                return mUnion.mBool;
-            }
-            return false;
-        }
-    
-        double asDouble() override {
-            if (mType == JavascriptType::NUMBER) {
-                return mUnion.mDouble;
-            }
-            return 0;
-        }
-    
-        int32_t asInt() override {
-            if (mType == JavascriptType::NUMBER) {
-                return (int32_t) mUnion.mDouble;
-            }
-            return 0;
-        }
-    
-        std::string asString() override {
-            if (mType == JavascriptType::STRING) {
-                return mUnion.mString;
-            }
-            return nullptr;
-        }
-    
-        std::shared_ptr<JavascriptArray> asArray() override {
-            if (mType == JavascriptType::ARRAY) {
-                return mUnion.mArray;
-            }
-            return nullptr;
-        }
-    
-        std::shared_ptr<JavascriptMap> asMap() override {
-            if (mType == JavascriptType::MAP) {
-                return mUnion.mMap;
-            }
-            return nullptr;
-        }
-    
-    private:
-        union U {
-            U() {}
-            ~U() {}
-            bool mBool;
-            double mDouble;
-            std::string mString;
-            std::shared_ptr<JavascriptArray> mArray;
-            std::shared_ptr<JavascriptMap> mMap;
-        } mUnion;
-        JavascriptType mType;
-    };
-}
+    static std::shared_ptr<JavascriptObject> fromMap(const std::shared_ptr<JavascriptMap> & value);
+    static std::shared_ptr<JavascriptObject> fromHaxe(::Dynamic value);
+};
 ')
 @:keep
 interface IJavascriptObject {
+}
+@:include('co/zenturi/mandolin/xnative/IJavascriptArray.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptMap.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptObject.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptType.h')
+@:native('std::shared_ptr<::JavascriptObject>')
+extern class JavascriptObject {
+    public static inline function init():JavascriptObject {
+        return untyped __cpp__('std::make_shared<::JavascriptObject>()');
+    }
+    @:native('getType')
+    public function getType():JavascriptType;
+
+    @:native('isNull')
+    public  function isNull():Bool;
+
+    @:native('fromNull')
+    public function fromNull():JavascriptObject;
+
+    @:native('asBoolean')
+    public function asBoolean():Bool;
+
+    @:native('asDouble')
+    public function asDouble():Float;
+
+    @:native('fromBoolean')
+    public function fromBoolean(b:Bool):JavascriptObject;
+
+    @:native('fromDouble')
+    public function fromDouble(d:Float):JavascriptObject;
+
+    @:native('asInt')
+    public function asInt():Int;
+
+    @:native('fromInt')
+    public function fromInt(i:Int):JavascriptObject;
+
+
+    @:native('asString')
+    public function asString():String;
+
+    @:native('fromString')
+    public function fromString(s:String):JavascriptObject;
+
+    @:native('asArray')
+    public function asArray():JavascriptArray;
+
+    @:native('fromArray')
+    public function fromArray(a:JavascriptArray):JavascriptObject;
+
+    @:native('fromMap')
+    public function fromMap(a:JavascriptMap):JavascriptObject;
+
+    @:native('asHaxeObject')
+    public function asHaxeObject():Dynamic;
+
+    @:native('fromHaxe')
+    public function fromHaxe(d:Dynamic):JavascriptObject;
+
 }
 #end

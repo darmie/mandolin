@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "JobQueue.hpp"
+#include <co/zenturi/mandolin/xnative/IJobQueue.h>
 
 #include <mandolin_helpers.h>
 

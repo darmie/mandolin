@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "JavascriptCallback.hpp"
+#include <co/zenturi/mandolin/xnative/IJavascriptCallback.h>
 
 #include <mandolin_helpers.h>
 
@@ -32,7 +32,7 @@ private:
 			JavaProxy(JniType j);
 			~JavaProxy();
 			void invoke(const std::vector< std::shared_ptr<JavascriptObject> > & args) override;
-			void invokeSingleArg(const std::shared_ptr<JavascriptObject> o) override;
+			void invokeSingleArg(const std::shared_ptr<JavascriptObject> & o) override;
 		private:
 		friend ::mandolin::JniInterface<::JavascriptCallback, ::mandolin_generated::NativeJavascriptCallback>;
 	};

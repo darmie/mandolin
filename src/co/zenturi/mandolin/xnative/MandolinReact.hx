@@ -1,6 +1,6 @@
 package co.zenturi.mandolin.xnative;
 
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 import com.facebook.react.bridge.*;
 
 @keep

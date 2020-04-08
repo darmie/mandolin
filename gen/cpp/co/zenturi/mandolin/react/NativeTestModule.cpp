@@ -16,7 +16,7 @@ namespace mandolin_generated {
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 	}
 
-	CJNIEXPORT object JNICALL Java_co_zenturi_mandolin_react_TestModule_create(JNIEnv* jniEnv, jobject /*this*/, ::mandolin_generated::NativeReactBridge::JniType j_bridge) {
+	CJNIEXPORT jobject JNICALL Java_co_zenturi_mandolin_react_TestModule_create(JNIEnv* jniEnv, jobject /*this*/, ::mandolin_generated::NativeReactBridge::JniType j_bridge) {
 		try {
 			DJINNI_FUNCTION_PROLOGUE0(jniEnv);
 			auto r = ::TestModule::create(::mandolin_generated::NativeReactBridge::toCpp(jniEnv, j_bridge));
@@ -26,15 +26,15 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1new(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_x){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
-			ref->new(::mandolin::I32::toCpp(jniEnv, j_x));
+			ref->__new(::mandolin::I32::toCpp(jniEnv, j_x));
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 	}
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1doSomething(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->doSomething();
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
@@ -42,7 +42,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1getValue(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, ::mandolin_generated::NativeJavascriptPromise::JniType j_promise){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->getValue(::mandolin_generated::NativeJavascriptPromise::toCpp(jniEnv, j_promise));
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
@@ -50,7 +50,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1setValue(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jstring j_value, ::mandolin_generated::NativeJavascriptPromise::JniType j_promise){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->setValue(::mandolin::String::toCpp(jniEnv, j_value),
 			 ::mandolin_generated::NativeJavascriptPromise::toCpp(jniEnv, j_promise));
@@ -59,7 +59,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1setUpdate(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, ::mandolin_generated::NativeJavascriptCallback::JniType j_callback){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->setUpdate(::mandolin_generated::NativeJavascriptCallback::toCpp(jniEnv, j_callback));
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
@@ -67,7 +67,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1add(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_x, jlong j_y, ::mandolin_generated::NativeJavascriptPromise::JniType j_promise){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->add(::mandolin::I32::toCpp(jniEnv, j_x),
 			 ::mandolin::I64::toCpp(jniEnv, j_y),
@@ -77,7 +77,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1testArray(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, ::mandolin_generated::NativeJavascriptArray::JniType j_arr, ::mandolin_generated::NativeJavascriptPromise::JniType j_promise){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->testArray(::mandolin_generated::NativeJavascriptArray::toCpp(jniEnv, j_arr),
 			 ::mandolin_generated::NativeJavascriptPromise::toCpp(jniEnv, j_promise));
@@ -86,7 +86,7 @@ namespace mandolin_generated {
 
 	CJNIEXPORT void JNICALL Java_co_zenturi_mandolin_react_TestModule_00024CppProxy_native_1testMap(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, ::mandolin_generated::NativeJavascriptMap::JniType j_map, ::mandolin_generated::NativeJavascriptPromise::JniType j_promise){
 		try {
-			MANDOLIN_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
 			ref->testMap(::mandolin_generated::NativeJavascriptMap::toCpp(jniEnv, j_map),
 			 ::mandolin_generated::NativeJavascriptPromise::toCpp(jniEnv, j_promise));

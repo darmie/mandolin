@@ -242,10 +242,10 @@ class ReactModule {
 			case "Int" | "haxe.Int32": "int";
 			case "Int64": "long";
             case "Float": "double";
-            case "Event": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptEvent" : "Event";
-            case "Callback": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptCallback" : "Callback";
-            case "Map": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptMap" : "ReadableMap";
-            case "Array": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptArray" : "ReadableArray";
+            // case "Event": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptEvent" : "Event";
+            case "JavascriptCallback": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptCallback" : "Callback";
+            case "JavascriptMap": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptMap" : "ReadableMap";
+            case "JavascriptArray": isProxy ? "co.zenturi.mandolin.xnative.react.JavascriptArray" : "ReadableArray";
 			case _: throw "Type not supported";
 		}
     }

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "ReactBridge.hpp"
+#include <co/zenturi/mandolin/xnative/IReactBridge.h>
 
 #include <mandolin_helpers.h>
 
@@ -33,11 +33,11 @@ private:
 			~JavaProxy();
 			std::shared_ptr<JavascriptMap> createMap() override;
 			std::shared_ptr<JavascriptArray> createArray() override;
-			std::shared_ptr<JavascriptMap> copyMap(const std::shared_ptr<JavascriptMap> m) override;
-			std::shared_ptr<JavascriptArray> copyArray(const std::shared_ptr<JavascriptArray> a) override;
-			void emitEventWithMap(const std::string name, const std::shared_ptr<JavascriptMap> params) override;
-			void emitEventWithArray(const std::string name, const std::shared_ptr<JavascriptArray> params) override;
-			std::shared_ptr<JobDispatcher> createJobDispatcher(const std::shared_ptr<JobQueue> queue) override;
+			std::shared_ptr<JavascriptMap> copyMap(const std::shared_ptr<JavascriptMap> & m) override;
+			std::shared_ptr<JavascriptArray> copyArray(const std::shared_ptr<JavascriptArray> & a) override;
+			void emitEventWithMap(const std::string & name, const std::shared_ptr<JavascriptMap> & params) override;
+			void emitEventWithArray(const std::string & name, const std::shared_ptr<JavascriptArray> & params) override;
+			std::shared_ptr<JobDispatcher> createJobDispatcher(const std::shared_ptr<JobQueue> & queue) override;
 		private:
 		friend ::mandolin::JniInterface<::ReactBridge, ::mandolin_generated::NativeReactBridge>;
 	};

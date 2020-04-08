@@ -13,7 +13,7 @@ NativeJavascriptCallback::JavaProxy::JavaProxy(JniType j) : Handle(::mandolin::j
 
 NativeJavascriptCallback::::JavaProxy::~JavaProxy() = default;
 
-void NativeJavascriptCallback::JavaProxy::invoke(const std::vector< std::shared_ptr<JavascriptObject> > & args) {
+void NativeJavascriptCallback::JavaProxy::invoke(std::vector< std::shared_ptr<JavascriptObject> > & args) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptCallback>::get();

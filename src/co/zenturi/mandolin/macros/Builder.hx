@@ -8,7 +8,6 @@ import sys.FileSystem;
 using StringTools;
 
 class Builder {
-	public static var modules:Array<String> = [];
 	static var cppFiles:Array<String> = [];
 	static var hxFiles:Array<String> = [];
 
@@ -16,10 +15,12 @@ class Builder {
 		var clazz = Context.getLocalModule();
 		var builder = new StringBuf();
 
-		var dir = Sys.getCwd();
+        var dir = Sys.getCwd();
+        trace(dir);
 
 		builder.add("<files id='haxe'>\n");
 		builder.add('\t<compilerflag value="-I${dir}helpers"/>\n');
+		builder.add('\t<compilerflag value="-I${dir}gen/cpp/co/zenturi/mandolin/xnative"/>\n');
 
 		recursiveLoop('${dir}helpers');
 
@@ -53,13 +54,18 @@ class Builder {
 					var m = exRex.matchedLeft().split("/");
 					var length = m.length;
 					var fileName = (m[length - 1]).replace(".", "");
-					if (packagePrefix != "co.zenturi.mandolin.macros") {
-						packages.push('$packagePrefix.$fileName');
+					
+					var fullpack = '$packagePrefix.$fileName';
+					if (packagePrefix.replace(".","-") != "co-zenturi-mandolin-macros") {
+						if(fullpack.replace(".","-") != 'co-zenturi-mandolin-react-ReactBuild'){
+							packages.push(fullpack);
+						}
+						
 					}
 				}
 			}
 		} catch (e:Dynamic) {
-			throw "source path 'src/' no found in current working directory: Make sure your project Haxe files are in 'src' directory";
+			throw 'source path "src/" no found in current working directory: Make sure your project Haxe files are in "src" directory: $e ';
 		}
 		return null;
 	}
@@ -94,7 +100,7 @@ class Builder {
 
 abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 	public inline function new() {
-		this = Builder.modules;
+		this = XBuilder.modules;
 	}
 
 	public inline function indexOf(x:String):Int {

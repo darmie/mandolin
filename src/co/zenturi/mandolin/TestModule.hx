@@ -1,9 +1,12 @@
 package co.zenturi.mandolin;
 
+#if cpp
+import co.zenturi.mandolin.xnative.*;
 
 @:build(co.zenturi.mandolin.macros.ReactModule.bind())
 @:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind(true))
 @:keep
+@:unreflective
 class TestModule {
 
     @:isVar public var value(get, set):String;
@@ -25,7 +28,7 @@ class TestModule {
         return this.value;
     }
 
-    function set_update(callback:String->Int) {
+    function set_update(callback:JavascriptCallback) {
         
     }
 
@@ -33,11 +36,12 @@ class TestModule {
         return 0;
     }
 
-    function testArray(arr:Array<String>):Array<String>{
+    function testArray(arr:JavascriptArray):JavascriptArray {
         return arr;
     }
 
-    function testMap(map:Map<String, Int>):Map<String, Int>{
+    function testMap(map:JavascriptMap):JavascriptMap {
         return map;
     }
 }
+#end

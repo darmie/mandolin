@@ -7,15 +7,21 @@
 #include <memory>
 #include <string>
 #include <co/zenturi/mandolin/TestModule.h>
-#include <co/zenturi/mandolin/xnative/ReactBridge.h>
+#include <JavascriptObjectImpl.hpp>
+#include <co/zenturi/mandolin/xnative/IJavascriptPromise.h>
+#include <co/zenturi/mandolin/xnative/IJavascriptCallback.h>
+#include <co/zenturi/mandolin/xnative/IJavascriptArray.h>
+#include <co/zenturi/mandolin/xnative/IJavascriptMap.h>
 
-#include <co/zenturi/mandolin/xnative/JavascriptPromise.h>
-#include <co/zenturi/mandolin/xnative/JavascriptCallback.h>
-#include <co/zenturi/mandolin/xnative/JavascriptArray.h>
-#include <co/zenturi/mandolin/xnative/JavascriptMap.h>
 
+class ReactBridge;
+class JobQueueImpl;
+class JobDispatcher;
+class JavascriptPromise;
+class JavascriptCallback;
+class JavascriptArray;
+class JavascriptMap;
 
-namespace mandolin_generated {
 
 class TestModule  {
 public:
@@ -25,35 +31,35 @@ public:
 	static std::shared_ptr<TestModule> create(const std::shared_ptr< ::ReactBridge > & bridge) {
 		return std::make_shared<TestModule>(bridge);
 	}
-	void new(const int32_t x) {
+	void __new(const int32_t x) {
 		this->ref = co::zenturi::mandolin::TestModule_obj::__new(x);
 	}
 	void doSomething() {
 		ref->doSomething();
 	}
 	void getValue(const std::shared_ptr<::JavascriptPromise> &promise) {
-		auto ret = ref->getValue();
-		promise->resolveString(ret);
+		auto ret = ref->get_value();
+		promise->resolveString(::JavascriptObject::fromHaxe(ret)->asString());
 	}
-	void setValue(const string value, const std::shared_ptr<::JavascriptPromise> &promise) {
-		auto ret = ref->setValue(value);
-		promise->resolveString(ret);
+	void setValue(const std::string value, const std::shared_ptr<::JavascriptPromise> &promise) {
+		auto ret = ref->set_value(value.c_str());
+		promise->resolveString(::JavascriptObject::fromHaxe(ret)->asString());
 	}
 	void setUpdate(const std::shared_ptr<::JavascriptCallback> & callback) {
-		ref->setUpdate(callback);
+		ref->set_update(callback);
 	}
 	void add(const int32_t x, const int64_t y, const std::shared_ptr<::JavascriptPromise> &promise) {
 		auto ret = ref->add(x, y);
-		promise->resolveInt(ret);
+		promise->resolveInt(::JavascriptObject::fromHaxe(ret)->asInt());
 	}
 	void testArray(const std::shared_ptr<::JavascriptArray> & arr, const std::shared_ptr<::JavascriptPromise> &promise) {
 		auto ret = ref->testArray(arr);
-		promise->resolveArray(::JavascriptObject::fromHaxe(ret));
+		promise->resolveArray(ret);
 	}
 	void testMap(const std::shared_ptr<::JavascriptMap> & map, const std::shared_ptr<::JavascriptPromise> &promise) {
 		auto ret = ref->testMap(map);
-		promise->resolveMap(::JavascriptObject::fromHaxe(ret));
+		promise->resolveMap(ret);
 	}
-}; // class TestModule
+private:
+	std::shared_ptr<ReactBridge> mBridge;	std::shared_ptr<JobQueueImpl> mQueue;	std::shared_ptr<JobDispatcher> mDispatcher;}; // class TestModule
 
-} // namespace mandolin_generated 

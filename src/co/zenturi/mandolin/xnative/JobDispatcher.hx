@@ -1,6 +1,6 @@
 package co.zenturi.mandolin.xnative;
 
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 class JobDispatcher {
     private var mThread: sys.thread.Thread;
     private var mDestroyed:Bool;
@@ -35,5 +35,33 @@ class JobDispatcher {
         mDestroyed = true;
         mQueue.get().interruptPoll();  
     }
+}
+#elseif cpp
+@:headerCode('
+class JobDispatcher {
+    public:
+        virtual ~JobDispatcher() {}
+    
+        virtual void start() = 0;
+    
+        virtual void quit() = 0;
+    };
+')
+@:keep
+interface IJobDispatcher {}
+
+@:include('co/zenturi/mandolin/xnative/IJavascriptDispatcher.h')
+@:native('std::shared_ptr<::JobDispatcher>')
+extern class JobDispatcher {
+
+    public static inline function init():JobDispatcher {
+        return untyped __cpp__('std::make_shared<::JobDispatcher>()');
+    }
+
+    @:native('start')
+    public function start():Void;
+
+    @:native('quit')
+    public function quit():Void;
 }
 #end

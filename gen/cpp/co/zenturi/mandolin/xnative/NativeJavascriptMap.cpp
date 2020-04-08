@@ -13,7 +13,7 @@ NativeJavascriptMap::JavaProxy::JavaProxy(JniType j) : Handle(::mandolin::jniGet
 
 NativeJavascriptMap::::JavaProxy::~JavaProxy() = default;
 
-bool NativeJavascriptMap::JavaProxy::hasKey(const std::string name) {
+bool NativeJavascriptMap::JavaProxy::hasKey(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -21,7 +21,7 @@ bool NativeJavascriptMap::JavaProxy::hasKey(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::Bool:toCpp(jniEnv, ret);
 }
-bool NativeJavascriptMap::JavaProxy::isNull(const std::string name) {
+bool NativeJavascriptMap::JavaProxy::isNull(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -29,7 +29,7 @@ bool NativeJavascriptMap::JavaProxy::isNull(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::Bool:toCpp(jniEnv, ret);
 }
-bool NativeJavascriptMap::JavaProxy::getBoolean(const std::string name) {
+bool NativeJavascriptMap::JavaProxy::getBoolean(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -37,7 +37,7 @@ bool NativeJavascriptMap::JavaProxy::getBoolean(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::Bool:toCpp(jniEnv, ret);
 }
-double NativeJavascriptMap::JavaProxy::getDouble(const std::string name) {
+double NativeJavascriptMap::JavaProxy::getDouble(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -45,7 +45,7 @@ double NativeJavascriptMap::JavaProxy::getDouble(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::F64:toCpp(jniEnv, ret);
 }
-int32_t NativeJavascriptMap::JavaProxy::getInt(const std::string name) {
+int32_t NativeJavascriptMap::JavaProxy::getInt(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -53,7 +53,7 @@ int32_t NativeJavascriptMap::JavaProxy::getInt(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::I32:toCpp(jniEnv, ret);
 }
-std::string NativeJavascriptMap::JavaProxy::getString(const std::string name) {
+std::string NativeJavascriptMap::JavaProxy::getString(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -61,7 +61,7 @@ std::string NativeJavascriptMap::JavaProxy::getString(const std::string name) {
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin::String:toCpp(jniEnv, ret);
 }
-std::shared_ptr<JavascriptArray> NativeJavascriptMap::JavaProxy::getArray(const std::string name) {
+std::shared_ptr<JavascriptArray> NativeJavascriptMap::JavaProxy::getArray(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -69,7 +69,7 @@ std::shared_ptr<JavascriptArray> NativeJavascriptMap::JavaProxy::getArray(const 
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptArray:toCpp(jniEnv, ret);
 }
-std::shared_ptr<JavascriptMap> NativeJavascriptMap::JavaProxy::getMap(const std::string name) {
+std::shared_ptr<JavascriptMap> NativeJavascriptMap::JavaProxy::getMap(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -77,7 +77,7 @@ std::shared_ptr<JavascriptMap> NativeJavascriptMap::JavaProxy::getMap(const std:
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptMap:toCpp(jniEnv, ret);
 }
-std::shared_ptr<JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(const std::string name) {
+std::shared_ptr<JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -85,13 +85,13 @@ std::shared_ptr<JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(cons
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptObject:toCpp(jniEnv, ret);
 }
-std::shared_ptr<JavascriptType> NativeJavascriptMap::JavaProxy::getType(const std::string name) {
+::JavascriptType NativeJavascriptMap::JavaProxy::getType(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	auto ret = jniEnv->CallObjectMethod(Handle::get().get(), data.method_getType, ::mandolin::String::fromCpp(jniEnv, name));
 	::mandolin::jniExceptionCheck(jniEnv);
-	return ::mandolin_generated::NativeJavascriptType:toCpp(jniEnv, ret);
+	return null;
 }
 std::shared_ptr<JavascriptMapKeyIterator> NativeJavascriptMap::JavaProxy::keySetIterator() {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
@@ -101,56 +101,56 @@ std::shared_ptr<JavascriptMapKeyIterator> NativeJavascriptMap::JavaProxy::keySet
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptMapKeyIterator:toCpp(jniEnv, ret);
 }
-void NativeJavascriptMap::JavaProxy::putNull(const std::string key) {
+void NativeJavascriptMap::JavaProxy::putNull(const std::string & key) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putNull, ::mandolin::String::fromCpp(jniEnv, key));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putBoolean(const std::string key, const bool value) {
+void NativeJavascriptMap::JavaProxy::putBoolean(const std::string & key, bool value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putBoolean, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin::Bool::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putDouble(const std::string key, const double value) {
+void NativeJavascriptMap::JavaProxy::putDouble(const std::string & key, double value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putDouble, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin::F64::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putInt(const std::string key, const int32_t value) {
+void NativeJavascriptMap::JavaProxy::putInt(const std::string & key, int32_t value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putInt, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin::I32::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putString(const std::string key, const std::string value) {
+void NativeJavascriptMap::JavaProxy::putString(const std::string & key, const std::string & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putString, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin::String::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putArray(const std::string key, const std::shared_ptr<JavascriptArray> & value) {
+void NativeJavascriptMap::JavaProxy::putArray(const std::string & key, const std::shared_ptr<JavascriptArray> & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putArray, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptArray:fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putMap(const std::string key, const std::shared_ptr<JavascriptMap> & value) {
+void NativeJavascriptMap::JavaProxy::putMap(const std::string & key, const std::shared_ptr<JavascriptMap> & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putMap, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putObject(const std::string key, const std::shared_ptr<JavascriptObject> & value) {
+void NativeJavascriptMap::JavaProxy::putObject(const std::string & key, const std::shared_ptr<JavascriptObject> & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -162,20 +162,6 @@ void NativeJavascriptMap::JavaProxy::merge(const std::shared_ptr<JavascriptMap> 
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	jniEnv->CallVoidMethod(Handle::get().get(), data.method_merge, ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, source));
-	::mandolin::jniExceptionCheck(jniEnv);
-}
-void NativeJavascriptMap::JavaProxy::getReadableMap() {
-	auto jniEnv = ::mandolin::jniGetThreadEnv();
-	::mandolin::JniLocalScope jscope(jniEnv, 10);
-	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_getReadableMap);
-	::mandolin::jniExceptionCheck(jniEnv);
-}
-void NativeJavascriptMap::JavaProxy::getWritableMap() {
-	auto jniEnv = ::mandolin::jniGetThreadEnv();
-	::mandolin::JniLocalScope jscope(jniEnv, 10);
-	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_getWritableMap);
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 }

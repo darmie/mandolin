@@ -2,11 +2,11 @@
 
 co.zenturi.mandolin.react.ReactBuild
 
---each 
+# --each 
 
---interp
+# --interp
 
---next 
+# --next 
 
 compile-react.hxml
 

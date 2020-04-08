@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "JavascriptMap.hpp"
+#include <co/zenturi/mandolin/xnative/IJavascriptMap.h>
 
 #include <mandolin_helpers.h>
 
@@ -31,28 +31,26 @@ private:
 		public:
 			JavaProxy(JniType j);
 			~JavaProxy();
-			bool hasKey(const std::string name) override;
-			bool isNull(const std::string name) override;
-			bool getBoolean(const std::string name) override;
-			double getDouble(const std::string name) override;
-			int32_t getInt(const std::string name) override;
-			std::string getString(const std::string name) override;
-			std::shared_ptr<JavascriptArray> getArray(const std::string name) override;
-			std::shared_ptr<JavascriptMap> getMap(const std::string name) override;
-			std::shared_ptr<JavascriptObject> getObject(const std::string name) override;
-			std::shared_ptr<JavascriptType> getType(const std::string name) override;
+			bool hasKey(const std::string & name) override;
+			bool isNull(const std::string & name) override;
+			bool getBoolean(const std::string & name) override;
+			double getDouble(const std::string & name) override;
+			int32_t getInt(const std::string & name) override;
+			std::string getString(const std::string & name) override;
+			std::shared_ptr<JavascriptArray> getArray(const std::string & name) override;
+			std::shared_ptr<JavascriptMap> getMap(const std::string & name) override;
+			std::shared_ptr<JavascriptObject> getObject(const std::string & name) override;
+			::JavascriptType getType(const std::string & name) override;
 			std::shared_ptr<JavascriptMapKeyIterator> keySetIterator() override;
-			void putNull(const std::string key) override;
-			void putBoolean(const std::string key, const bool value) override;
-			void putDouble(const std::string key, const double value) override;
-			void putInt(const std::string key, const int32_t value) override;
-			void putString(const std::string key, const std::string value) override;
-			void putArray(const std::string key, const std::shared_ptr<JavascriptArray> value) override;
-			void putMap(const std::string key, const std::shared_ptr<JavascriptMap> value) override;
-			void putObject(const std::string key, const std::shared_ptr<JavascriptObject> value) override;
-			void merge(const std::shared_ptr<JavascriptMap> source) override;
-			void getReadableMap() override;
-			void getWritableMap() override;
+			void putNull(const std::string & key) override;
+			void putBoolean(const std::string & key, bool value) override;
+			void putDouble(const std::string & key, double value) override;
+			void putInt(const std::string & key, int32_t value) override;
+			void putString(const std::string & key, const std::string & value) override;
+			void putArray(const std::string & key, const std::shared_ptr<JavascriptArray> & value) override;
+			void putMap(const std::string & key, const std::shared_ptr<JavascriptMap> & value) override;
+			void putObject(const std::string & key, const std::shared_ptr<JavascriptObject> & value) override;
+			void merge(const std::shared_ptr<JavascriptMap> & source) override;
 		private:
 		friend ::mandolin::JniInterface<::JavascriptMap, ::mandolin_generated::NativeJavascriptMap>;
 	};
@@ -67,8 +65,17 @@ private:
 	const jmethodID method_getArray { ::mandolin::jniGetMethodID(clazz.get(), "getArray", "(Ljava/lang/String;)Lco/zenturi/mandolin/xnative/JavascriptArray;") };
 	const jmethodID method_getMap { ::mandolin::jniGetMethodID(clazz.get(), "getMap", "(Ljava/lang/String;)Lco/zenturi/mandolin/xnative/JavascriptMap;") };
 	const jmethodID method_getObject { ::mandolin::jniGetMethodID(clazz.get(), "getObject", "(Ljava/lang/String;)Lco/zenturi/mandolin/xnative/JavascriptObject;") };
-	const jmethodID method_getType { ::mandolin::jniGetMethodID(clazz.get(), "getType", "(Ljava/lang/String;)Lco/zenturi/mandolin/xnative/JavascriptType;") };
+	const jmethodID method_getType { ::mandolin::jniGetMethodID(clazz.get(), "getType", "(Ljava/lang/String;)") };
 	const jmethodID method_keySetIterator { ::mandolin::jniGetMethodID(clazz.get(), "keySetIterator", "()Lco/zenturi/mandolin/xnative/JavascriptMapKeyIterator;") };
+	const jmethodID method_putNull { ::mandolin::jniGetMethodID(clazz.get(), "putNull", "(Ljava/lang/String;)V") };
+	const jmethodID method_putBoolean { ::mandolin::jniGetMethodID(clazz.get(), "putBoolean", "(Ljava/lang/String; Z)V") };
+	const jmethodID method_putDouble { ::mandolin::jniGetMethodID(clazz.get(), "putDouble", "(Ljava/lang/String; D)V") };
+	const jmethodID method_putInt { ::mandolin::jniGetMethodID(clazz.get(), "putInt", "(Ljava/lang/String; I)V") };
+	const jmethodID method_putString { ::mandolin::jniGetMethodID(clazz.get(), "putString", "(Ljava/lang/String; Ljava/lang/String;)V") };
+	const jmethodID method_putArray { ::mandolin::jniGetMethodID(clazz.get(), "putArray", "(Ljava/lang/String; Lco/zenturi/mandolin/xnative/JavascriptArray;)V") };
+	const jmethodID method_putMap { ::mandolin::jniGetMethodID(clazz.get(), "putMap", "(Ljava/lang/String; Lco/zenturi/mandolin/xnative/JavascriptMap;)V") };
+	const jmethodID method_putObject { ::mandolin::jniGetMethodID(clazz.get(), "putObject", "(Ljava/lang/String; Lco/zenturi/mandolin/xnative/JavascriptObject;)V") };
+	const jmethodID method_merge { ::mandolin::jniGetMethodID(clazz.get(), "merge", "(Lco/zenturi/mandolin/xnative/JavascriptMap;)V") };
 };
 
 } // namespace mandolin_generated 

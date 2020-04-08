@@ -1,7 +1,7 @@
 package co.zenturi.mandolin.xnative;
 
 
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
 class Job {
   public function new() {
@@ -17,19 +17,18 @@ class Job {
 #include <memory>
 #include <functional>
 
-namespace mandolin_generated {
     class Job {
         public:
             ~Job();
             virtual void run() = 0;
     };
 
-    class JobImpl : ::mandolin_generated::Job {
+    class JobImpl : public Job {
         public:
             JobImpl(std::function<void()> xfunc) : mFunc(xfunc) {
 
             }
-            static std::shared_ptr<::mandolin_generated::Job> create(std::function<void()> xfunc) {
+            static std::shared_ptr<Job> create(std::function<void()> xfunc) {
                 return std::make_shared<JobImpl>(xfunc);
             }
 
@@ -39,7 +38,17 @@ namespace mandolin_generated {
         private:
             const std::function<void()> mFunc;
     };
-}
+
 ')
-interface Job{}
+@:keep
+interface IJob{}
+@:include('co/zenturi/mandolin/xnative/IJob.h')
+@:native('std::shared_ptr<::Job>')
+extern class Job {
+    public static inline function init():Job {
+        return untyped __cpp__('std::make_shared<::Job>()');
+    }
+    @:native('run')
+    public function run():Void;
+}
 #end

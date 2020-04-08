@@ -1,7 +1,6 @@
 package co.zenturi.mandolin.xnative;
 
-
-#if (!macro || java)
+#if ((java || !macro ) && !cpp)
 #if java
 import com.facebook.react.bridge.Callback;
 
@@ -37,5 +36,40 @@ class JavascriptCallback {
         invoke(args);
         #end
     }
+}
+#elseif cpp
+@:headerCode('
+#include <memory>
+#include <vector>
+
+class JavascriptObject;
+
+class JavascriptCallback {
+public:
+    virtual ~JavascriptCallback() {}
+
+    virtual void invoke(const std::vector<std::shared_ptr<JavascriptObject>> & args) = 0;
+
+    virtual void invokeSingleArg(const std::shared_ptr<JavascriptObject> & arg) = 0;
+};
+')
+@:keep
+interface IJavascriptCallback {
+
+}
+@:include('co/zenturi/mandolin/xnative/IJavascriptCallback.h')
+@:include('co/zenturi/mandolin/xnative/IJavascriptObject.h')
+@:native('std::shared_ptr<::JavascriptCallback>')
+extern class JavascriptCallback {
+    public static inline function init():JavascriptCallback{
+        return untyped __cpp__('std::make_shared<::JavascriptCallback>()');
+    }
+
+    @:native('invoke')
+    public function invoke(args: Array<JavascriptObject>):Void;
+
+    @:native('invokeSingleArg')
+    public function invokeSingleArg(o:JavascriptObject):Void;
+
 }
 #end
