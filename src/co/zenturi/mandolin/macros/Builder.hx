@@ -119,7 +119,7 @@ abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 			for (module in this) {
 				sbuf.add('$module\n');
 			}
-			sbuf.add('\n-dce full\n--each\n--interp\n');
+			sbuf.add('\n-dce std\n--each\n--interp\n');
 
 			// cpp compile
 			sbuf.add('
