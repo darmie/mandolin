@@ -1,20 +1,10 @@
 -cp src/
 
+-dce full
 co.zenturi.mandolin.react.ReactBuild
 
-# --each 
-
-# --interp
-
-# --next 
 
 compile-react.hxml
 
-# --next
-
-# -java-lib lib/android.jar
-# -java-lib lib/android-stubs-src.jar
-# -java-lib lib/react-native-0.61.5.jar
 
 
-# -java bin/java/

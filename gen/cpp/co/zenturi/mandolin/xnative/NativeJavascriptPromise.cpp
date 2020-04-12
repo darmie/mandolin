@@ -17,21 +17,21 @@ void NativeJavascriptPromise::JavaProxy::resolveMap(const std::shared_ptr<Javasc
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptPromise>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveMap, ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, map));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveMap, ::mandolin_generated::NativeJavascriptMap::fromCpp(jniEnv, map));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 void NativeJavascriptPromise::JavaProxy::resolveArray(const std::shared_ptr<JavascriptArray> & arr) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptPromise>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveArray, ::mandolin_generated::NativeJavascriptArray:fromCpp(jniEnv, arr));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveArray, ::mandolin_generated::NativeJavascriptArray::fromCpp(jniEnv, arr));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptPromise::JavaProxy::resolveObject(const std::shared_ptr<JavascriptObject> & obj) {
+void NativeJavascriptPromise::JavaProxy::resolveObject(const std::shared_ptr<::JavascriptObject> & obj) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptPromise>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveObject, ::mandolin_generated::NativeJavascriptObject:fromCpp(jniEnv, obj));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_resolveObject, ::mandolin_generated::NativeJavascriptObject::fromCpp(jniEnv, obj));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 void NativeJavascriptPromise::JavaProxy::resolveDouble(double v) {

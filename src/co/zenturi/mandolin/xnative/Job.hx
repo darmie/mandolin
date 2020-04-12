@@ -1,14 +1,24 @@
 package co.zenturi.mandolin.xnative;
 
 
-#if ((java || !macro ) && !cpp)
+#if java 
+
+@:native('co.zenturi.mandolin.xnative.react.Job')
+extern class IJob {
+    @:native('run')
+    public function run():Void;
+}
+
+@:build(co.zenturi.mandolin.macros.JNI.bind(true))
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
-class Job {
+@:keep
+@:nativeGen
+class Job extends IJob {
   public function new() {
       
   }
   
-  public  function run():Void {
+  override public  function run():Void {
       
   }
 }
@@ -41,6 +51,7 @@ class Job {
 
 ')
 @:keep
+@:nativeGen
 interface IJob{}
 @:include('co/zenturi/mandolin/xnative/IJob.h')
 @:native('std::shared_ptr<::Job>')

@@ -1,21 +1,48 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
+#if java  
 import com.facebook.react.bridge.*;
+import co.zenturi.mandolin.xnative.JavascriptMap.IJavascriptMap;
+import co.zenturi.mandolin.xnative.JavascriptArray.IJavascriptArray;
+import co.zenturi.mandolin.xnative.ReactBridge.IReactBridge;
 
-@keep
-class MandolinReact {
-    public function new() {
-        
-    }
+@:native('co.zenturi.mandolin.xnative.react.MandolinReact')
+extern class IMandolinReact {
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.createReactBridge')
+    public static function createReactBridge(context:ReactApplicationContext):IReactBridge;
 
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.createMap')
+    public static function createMap(map:IJavascriptMap):IJavascriptMap;
+
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.createArray')
+    public static function createArray(map:IJavascriptArray):IJavascriptArray;
+
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.copyReactMap')
+    public static function copyReactMap(source:ReadableMap  , dest:WritableMap):Void;
+
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.copyReactArray')
+    public static function copyReactArray(source:ReadableArray , dest:WritableArray):Void;
+
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.wrap')
+    public static function wrap(object:Dynamic):Dynamic;
+
+    @:native('co.zenturi.mandolin.xnative.react.MandolinReact.unwrap')
+    public static function unwrap(value:Dynamic):Dynamic;
+}
+
+
+@:build(co.zenturi.mandolin.macros.JNI.bind())
+@dep("com.facebook.react.bridge.*")
+@:keep
+@:nativeGen
+class MandolinReact extends IMandolinReact {
     
-    public static function createReactBridge(context:#if java ReactApplicationContext #else Dynamic #end) {
-        return new ReactBridge(context);
+    override public static function createReactBridge(context:#if java ReactApplicationContext #else Dynamic #end):IReactBridge {
+        return new co.zenturi.mandolin.xnative.ReactBridge(context);
     }
 
 
-    public static function createMap(?map:MandolinObject<JavascriptMap>):MandolinObject<JavascriptMap> {
+    override public static function createMap(?map:JavascriptMap):JavascriptMap {
         var ret = new JavascriptMap();
 
         if(map != null) ret.merge(map);
@@ -23,7 +50,7 @@ class MandolinReact {
         return ret;
     }
 
-    public static function createArray(?arr:JavascriptArray):MandolinObject<JavascriptArray> {
+    override public static function createArray(?arr:JavascriptArray):JavascriptArray {
         var ret = new JavascriptArray();
 
         if(arr != null) ret.append(arr);
@@ -31,7 +58,7 @@ class MandolinReact {
         return ret;
     }
 
-    public static function wrap(object:Dynamic):Dynamic {
+    override public static function wrap(object:Dynamic):Dynamic {
 
         if(object == null){
             return JavascriptObject.fromNull();
@@ -42,18 +69,18 @@ class MandolinReact {
             return JavascriptObject.fromMap(_obj);
         }
 
-        #if java
-        if((untyped __java__('{0} instanceof Collection || {0} instanceof Map', object))){
-            return JavascriptObject.fromMap(MandolinReact.wrap(object));
-        }
-        #end
+
+        // if((untyped __java__('{0} instanceof java.util.Collection || {0} instanceof java.util.Map', object))){
+        //     return JavascriptObject.fromMap(MandolinReact.wrap(object));
+        // }
+      
 
         if(Std.is(object, JavascriptArray)){
             return JavascriptObject.fromArray(object);
         }
 
 
-        if(Std.is(object, Array) #if java || untyped __java__('{0}.getClass().isArray()', object) #end){
+        if(Std.is(object, Array)){
             return JavascriptObject.fromArray(object);
         }
 
@@ -74,23 +101,24 @@ class MandolinReact {
 
 
         
-        #if java
+    
         if(Std.is(object, ReadableType)){
-            switch (object) {
-                case Array:
-                    return JavascriptType.ARRAY;
-                case Boolean:
-                    return JavascriptType.BOOLEAN;
-                case Map:
-                    return JavascriptType.MAP;
-                case Number:
-                    return JavascriptType.NUMBER;
-                case String:
-                    return JavascriptType.STRING;
-                case Null: return JavascriptType.NIL;
-                default:
-                    return JavascriptType.NIL;
+            if(object == ReadableType.Array){
+                return JavascriptType.ARRAY;
             }
+            if(object == ReadableType.Boolean){
+                return JavascriptType.BOOLEAN;
+            }
+            if(object == ReadableType.Map){
+                return JavascriptType.MAP;
+            }
+            if(object == ReadableType.Number){
+                return JavascriptType.NUMBER;
+            }
+            if(object == ReadableType.String){
+                return JavascriptType.STRING;
+            }
+            return JavascriptType.NIL;
         }
         
 
@@ -99,31 +127,43 @@ class MandolinReact {
         }
 
     
-
-
-        switch (object.getType()){
-            case com.facebook.react.bridge.Array: return JavascriptObject.fromArray(MandolinReact.wrap(object.asArray()));
-            case com.facebook.react.bridge.Map: return JavascriptObject.fromMap(MandolinReact.wrap(object.asMap()));
-            case com.facebook.react.bridge.Number: return JavascriptObject.fromDouble(object.asDouble());
-            case com.facebook.react.bridge.Null: return JavascriptObject.fromNull();
-            case com.facebook.react.bridge.String: return JavascriptObject.fromString(object.asString());
-            case com.facebook.react.bridge.Boolean: return JavascriptObject.fromBoolean(object.asBoolean());
-            default: return JavascriptObject.fromNull();
+        if(object.getType() == com.facebook.react.bridge.ReadableType.Array){
+            return JavascriptObject.fromArray(MandolinReact.wrap(object.asArray()));
         }
 
-        #end 
-
-        var hxType =  Type.getClassName(Type.getClass(object));
-        switch hxType {
-            case "haxe.ds.IntMap" | "haxe.ds.StringMap" | "haxe.ds.ObjectMap": return JavascriptObject.fromMap(JavascriptObject.fromMap(object));
-            case _: return null;
+        if(object.getType() == com.facebook.react.bridge.ReadableType.Map){
+            return JavascriptObject.fromMap(MandolinReact.wrap(object.asMap()));
         }
+
+        if(object.getType() == com.facebook.react.bridge.ReadableType.Number){
+            return JavascriptObject.fromDouble(object.asDouble());
+        }
+
+        if(object.getType() == com.facebook.react.bridge.ReadableType.String){
+            return JavascriptObject.fromString(object.asString());
+        }
+
+        if(object.getType() == com.facebook.react.bridge.ReadableType.Boolean){
+            return JavascriptObject.fromBoolean(object.asBoolean());
+        }
+
+        if(object.getType() == com.facebook.react.bridge.ReadableType.Null){
+            return return JavascriptObject.fromNull();
+        }
+
+    
+
+        // var hxType =  Type.getClassName(Type.getClass(object));
+        // switch hxType {
+        //     case "haxe.ds.IntMap" | "haxe.ds.StringMap" | "haxe.ds.ObjectMap": return JavascriptObject.fromMap(JavascriptObject.fromMap(object));
+        //     case _: return null;
+        // }
 
         return null;
 
     }
 
-    public static function unwrap(value:Dynamic){
+    override public static function unwrap(value:Dynamic):Dynamic {
         if(Std.is(value, JavascriptMap)){
             return value.getWriteableMap();
         }
@@ -150,33 +190,36 @@ class MandolinReact {
         }
     }
 
-    public static function copyReactArray(source:#if java ReadableArray #else Dynamic #end , dest: #if java  WritableArray#else Dynamic #end) {
-       #if java
+    override public static function copyReactArray(source:ReadableArray , dest:WritableArray):Void {
+     
         for (i in 0...source.size()) {
-            switch (source.getType(i)) {
-                case com.facebook.react.bridge.Null:
-                    dest.pushNull();
-                case com.facebook.react.bridge.Boolean:
-                    dest.pushBoolean(source.getBoolean(i));
-                case com.facebook.react.bridge.Number:
-                    dest.pushDouble(source.getDouble(i));
-                case com.facebook.react.bridge.String:
-                    dest.pushString(source.getString(i));
-                case com.facebook.react.bridge.Array:
-                    var arrayCopy:WritableArray = Arguments.createArray();
-                    copyReactArray(source.getArray(i), arrayCopy);
-                    dest.pushArray(arrayCopy);
-                case com.facebook.react.bridge.Map:
-                    var mapCopy:WritableMap = Arguments.createMap();
-                    copyReactMap(source.getMap(i), mapCopy);
-                    dest.pushMap(mapCopy);
-                default: dest.pushNull();
+            if(source.getType(i) == com.facebook.react.bridge.ReadableType.Null){
+                dest.pushNull();
+            } else if(source.getType(i) == com.facebook.react.bridge.ReadableType.Boolean){
+                dest.pushBoolean(source.getBoolean(i));
+            }
+            else if(source.getType(i) == com.facebook.react.bridge.ReadableType.Number){
+                dest.pushDouble(source.getDouble(i));
+            }
+            else if(source.getType(i) == com.facebook.react.bridge.ReadableType.String){
+                dest.pushString(source.getString(i));
+            }
+            else if(source.getType(i) == com.facebook.react.bridge.ReadableType.Array){
+                var arrayCopy:WritableArray = Arguments.createArray();
+                copyReactArray(source.getArray(i), arrayCopy);
+                dest.pushArray(arrayCopy);
+            }
+            else if(source.getType(i) == com.facebook.react.bridge.ReadableType.Map){
+                var mapCopy:WritableMap = Arguments.createMap();
+                copyReactMap(source.getMap(i), mapCopy);
+                dest.pushMap(mapCopy);
+            } else {
+                dest.pushNull();
             }
         }
-        #end
     }
 
-    public static function copyReactMap(source:#if java ReadableMap #else Dynamic #end , dest:#if java  WritableMap #else Dynamic #end) {
+    override public static function copyReactMap(source:ReadableMap  , dest:WritableMap):Void {
         dest.merge(source);
     }
 }

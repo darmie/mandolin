@@ -1,27 +1,38 @@
 package co.zenturi.mandolin.xnative;
-#if ((java || !macro ) && !cpp)
-
 #if java
+
+
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
-#end
+
+@:native('co.zenturi.mandolin.xnative.react.JavascriptMapKeyIterator')
+extern class IJavascriptMapKeyIterator {
+    @:native('hasNextKey')
+    public function hasNextKey():Bool;
+
+    @:native('nextKey')
+    public function nextKey():String;
+}
 
 @:build(co.zenturi.mandolin.macros.JNI.bind())
+@:build(co.zenturi.mandolin.macros.JNI.proxy())
+@dep("com.facebook.react.bridge.ReadableMapKeySetIterator")
 @:keep
-class JavascriptMapKeyIterator {
+@:nativeGen
+class JavascriptMapKeyIterator extends IJavascriptMapKeyIterator {
    
-    private var mReadableMapKeySetIterator: #if java ReadableMapKeySetIterator #else Dynamic #end;
+    private var mReadableMapKeySetIterator: ReadableMapKeySetIterator;
 
-    #if java
+
     public function new(readableMapKeySetIterator:ReadableMapKeySetIterator) {
         mReadableMapKeySetIterator = readableMapKeySetIterator;
     }
-    #end
 
-    public function hasNextKey():Bool {
+
+    override public function hasNextKey():Bool {
         return mReadableMapKeySetIterator.hasNextKey();
     }
 
-    public function nextKey():String {
+    override public function nextKey():String {
         return mReadableMapKeySetIterator.nextKey();
     }
 }
@@ -37,6 +48,7 @@ class JavascriptMapKeyIterator {
 };
 ')
 @:keep
+@:nativeGen
 interface IJavascriptMapKeyIterator {}
 @:native('std::shared_ptr<::JavascriptMapKeyIterator>')
 extern class JavascriptMapKeyIterator {
@@ -44,6 +56,6 @@ extern class JavascriptMapKeyIterator {
     public function hasNextKey():Bool;
 
     @:native('nextKey')
-    public function nextKey():Void;
+    public function nextKey():String;
 }
 #end

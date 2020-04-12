@@ -1,107 +1,177 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
-#if java
+#if java 
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
-#end
+
+import co.zenturi.mandolin.xnative.JavascriptMap.IJavascriptMap;
+import co.zenturi.mandolin.xnative.JavascriptObject.IJavascriptObject;
+
+
+@:native("co.zenturi.mandolin.xnative.react.JavascriptArray")
+extern class IJavascriptArray {
+
+    @:native('size')
+    public function size():Int;
+
+    @:native('isNull')
+    public function isNull(index:Int):Bool;
+
+    @:native('getBoolean')
+    public function getBoolean(index:Int):Bool;
+
+    @:native('getDouble')
+    public function getDouble(index:Int):Float;
+    
+    @:native('getInt')
+    public function getInt(index:Int):Int; 
+
+    @:native('getString')
+    public function getString(index:Int):String; 
+
+    @:native('getArray')
+    public function getArray(index:Int):IJavascriptArray;
+
+    @:native('getMap')
+    public function getMap(index:Int):IJavascriptMap;
+
+    @:native('getObject')
+    public function getObject(index:Int):IJavascriptObject;
+
+    @:native('getType')
+    public function getType(index:Int):JavascriptType;
+
+    @:native('pushNull')
+    public function pushNull():Void;
+
+    @:native('pushBoolean')
+    public function pushBoolean(value:Bool ):Void;
+
+    @:native('pushDouble')
+    public function pushDouble(value:Float ):Void;
+
+    @:native('pushInt')
+    public function pushInt(value:Int):Void;
+
+    @:native('pushString')
+    public function pushString(value:String):Void;
+
+    @:native('pushArray')
+    public function pushArray(array:IJavascriptArray):Void;
+
+    @:native('pushMap')
+    public function pushMap( map:IJavascriptMap):Void;
+
+    @:native('pushObject')
+    public function pushObject(value:IJavascriptObject):Void;
+
+    @:native('append')
+    public function append(source:IJavascriptArray):Void;
+}
+
 @:build(co.zenturi.mandolin.macros.JNI.bind())
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
+@dep("com.facebook.react.bridge.*")
 @:keep
-class JavascriptArray {
+@:nativeGen
+class JavascriptArray extends IJavascriptArray {
+
    
-    private var mReadableArray: #if java ReadableArray #else Dynamic #end;
-    private var mWritableArray: #if java WritableArray #else Dynamic #end;
+    private var mReadableArray:ReadableArray;
+    private var mWritableArray:WritableArray;
+   
 
-    #if java
+    
     public function new(?arr:ReadableArray) {
-        mWritableArray = arr != null ? arr : Arguments.createArray();
-        mReadableArray = arr != null ? null : mWritableArray;
+        mWritableArray = arr != null ? null : Arguments.createArray();
+        mReadableArray = arr != null ? arr :  cast mWritableArray;
     }
-    #else 
-    public function new() {
+   
+    
 
-    }
-    #end
-
-    public function size():Int {
+    override public function size():Int {
         return mReadableArray.size();
     }
 
-    public function isNull(index:Int):Bool {
+    override public function isNull(index:Int):Bool {
         return mReadableArray.isNull(index);
     }
 
-    public function getBoolean(index:Int):Bool {
+    override public function getBoolean(index:Int):Bool {
         return mReadableArray.getBoolean(index);
     }
 
-    public function getDouble(index:Int):Float {
+    override public function getDouble(index:Int):Float {
         return mReadableArray.getDouble(index);
     }
 
-    public function getInt(index:Int):Int {
+    override public function getInt(index:Int):Int {
         return mReadableArray.getInt(index);
     }
 
-    public function getString(index:Int):String {
+    override public function getString(index:Int):String {
         return mReadableArray.getString(index);
     }
 
-    public function getArray(index:Int):MandolinObject<JavascriptArray> {
+    override public function getArray(index:Int):IJavascriptArray {
         return MandolinReact.wrap(mReadableArray.getArray(index));
     }
 
-    public function getMap(index:Int):MandolinObject<JavascriptMap> {
+    override public function getMap(index:Int):IJavascriptMap {
         return MandolinReact.wrap(mReadableArray.getMap(index));
     }
 
-    public function getObject(index:Int):JavascriptObject {
+    override public function getObject(index:Int):IJavascriptObject {
         return MandolinReact.wrap(mReadableArray.getDynamic(index));
     }
 
-    public function getType(index:Int):JavascriptType {
+    override public function getType(index:Int):JavascriptType {
         return MandolinReact.wrap(mReadableArray.getType(index));
     }
 
 
-    public function pushNull():Void {
+    override public function pushNull():Void {
         mWritableArray.pushNull();
     }
 
     
-    public function pushBoolean(value:Bool ):Void {
+    override public function pushBoolean(value:Bool ):Void {
         mWritableArray.pushBoolean(value);
     }
 
     
-    public function pushDouble(value:Float ):Void {
+    override public function pushDouble(value:Float ):Void {
         mWritableArray.pushDouble(value);
     }
 
     
-    public function pushInt(value:Int):Void {
+    override public function pushInt(value:Int):Void {
         mWritableArray.pushInt(value);
     }
 
     
-    public function pushString(value:String):Void {
+    override public function pushString(value:String):Void {
         mWritableArray.pushString(value);
     }
 
     
-    public function pushArray(array:MandolinObject<JavascriptArray>):Void {
+    override public function pushArray(array:MandolinObject<JavascriptArray>):Void {
         mWritableArray.pushArray(MandolinReact.unwrap(array));
     }
 
     
-    public function pushMap( map:MandolinObject<JavascriptMap>):Void {
-        mWritableArray.pushMap(MandolinReact.unwrap(map));
+    override public function pushMap( map:MandolinObject<JavascriptMap>):Void {
+
+        var writer:Dynamic = mWritableArray;
+        writer.pushMap(MandolinReact.unwrap(map));
+ 
+        
     }
 
     
-    public function pushObject(value:MandolinObject<JavascriptObject> ):Void {
+    override public function pushObject(value:MandolinObject<JavascriptObject> ):Void {
         var type:JavascriptType = value.get().getType();
         var _value:JavascriptObject = value;
         switch (type) {
@@ -110,7 +180,7 @@ class JavascriptArray {
             case JavascriptType.BOOLEAN:
                 mWritableArray.pushBoolean(_value.asBoolean());
             case JavascriptType.MAP:
-                mWritableArray.pushMap(MandolinReact.unwrap(_value.asMap()));
+                this.pushMap(_value.asMap());
             case JavascriptType.NUMBER:
                 mWritableArray.pushDouble(_value.asDouble());
             case JavascriptType.STRING:
@@ -122,21 +192,19 @@ class JavascriptArray {
     }
 
     
-    public function append(source:MandolinObject<JavascriptArray> ):Void {
+    override public function append(source:MandolinObject<JavascriptArray> ):Void {
         var _source:JavascriptArray = source;
         if (mWritableArray != null) {
-           #if java MandolinReact.copyReactArray(_source.getReadableArray(), mWritableArray); #end
+           MandolinReact.copyReactArray(_source.getReadableArray(), mWritableArray);
         }
     }
-    #if java
-    public function getReadableArray(): #if  java ReadableArray #else Dynamic #end {
+    @ignore public function getReadableArray():  ReadableArray {
         return mReadableArray;
     }
 
-    public function getWritableArray():#if  java ReadableArray #else Dynamic #end {
+    @ignore public function getWritableArray():WritableArray {
         return mWritableArray;
     }
-    #end
 
 }
 #elseif cpp
@@ -192,6 +260,7 @@ public:
 };
 ')
 @:keep
+@:nativeGen
 interface IJavascriptArray{
 
 }

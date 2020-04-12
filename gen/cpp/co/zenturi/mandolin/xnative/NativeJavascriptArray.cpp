@@ -83,7 +83,7 @@ std::shared_ptr<::JavascriptObject> NativeJavascriptArray::JavaProxy::getObject(
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptArray>::get();
 	auto ret = jniEnv->CallObjectMethod(Handle::get().get(), data.method_getObject, ::mandolin::I32::fromCpp(jniEnv, index));
 	::mandolin::jniExceptionCheck(jniEnv);
-	return null;
+	return ::mandolin_generated::NativeJavascriptObject:toCpp(jniEnv, ret);
 }
 ::JavascriptType NativeJavascriptArray::JavaProxy::getType(int32_t index) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();

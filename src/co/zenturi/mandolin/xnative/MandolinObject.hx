@@ -2,7 +2,7 @@ package co.zenturi.mandolin.xnative;
 
 import haxe.Serializer;
 import haxe.Unserializer;
-
+@:nativeGen
 abstract MandolinObject<T>(Dynamic) from Dynamic to T to String to Int to Float to haxe.Int64 {
     inline function new(x:Dynamic){
         if(Std.is(x, String)) this = Unserializer.run(x);

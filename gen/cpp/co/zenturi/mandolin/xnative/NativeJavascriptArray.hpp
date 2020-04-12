@@ -37,8 +37,8 @@ private:
 			double getDouble(int32_t index) override;
 			int32_t getInt(int32_t index) override;
 			std::string getString(int32_t index) override;
-			std::shared_ptr<JavascriptArray> getArray(int32_t index) override;
-			std::shared_ptr<JavascriptMap> getMap(int32_t index) override;
+			std::shared_ptr<::JavascriptArray> getArray(int32_t index) override;
+			std::shared_ptr<::JavascriptMap> getMap(int32_t index) override;
 			std::shared_ptr<::JavascriptObject> getObject(int32_t index) override;
 			::JavascriptType getType(int32_t index) override;
 			void pushNull() override;
@@ -51,18 +51,18 @@ private:
 			void pushObject(const std::shared_ptr<JavascriptObject> & value) override;
 			void append(const std::shared_ptr<JavascriptArray> & source) override;
 		private:
-		friend ::mandolin::JniInterface<::JavascriptArray, ::mandolin_generated::NativeJavascriptArray>;
+			friend ::mandolin::JniInterface<::JavascriptArray, ::mandolin_generated::NativeJavascriptArray>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/JavascriptArray") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/JavascriptArray") };
 	const jmethodID method_size { ::mandolin::jniGetMethodID(clazz.get(), "size", "()I") };
 	const jmethodID method_isNull { ::mandolin::jniGetMethodID(clazz.get(), "isNull", "(I)Z") };
 	const jmethodID method_getBoolean { ::mandolin::jniGetMethodID(clazz.get(), "getBoolean", "(I)Z") };
 	const jmethodID method_getDouble { ::mandolin::jniGetMethodID(clazz.get(), "getDouble", "(I)D") };
 	const jmethodID method_getInt { ::mandolin::jniGetMethodID(clazz.get(), "getInt", "(I)I") };
 	const jmethodID method_getString { ::mandolin::jniGetMethodID(clazz.get(), "getString", "(I)Ljava/lang/String;") };
-	const jmethodID method_getArray { ::mandolin::jniGetMethodID(clazz.get(), "getArray", "(I)Lco/zenturi/mandolin/xnative/JavascriptArray;") };
-	const jmethodID method_getMap { ::mandolin::jniGetMethodID(clazz.get(), "getMap", "(I)Lco/zenturi/mandolin/xnative/JavascriptMap;") };
+	const jmethodID method_getArray { ::mandolin::jniGetMethodID(clazz.get(), "getArray", "(I)") };
+	const jmethodID method_getMap { ::mandolin::jniGetMethodID(clazz.get(), "getMap", "(I)") };
 	const jmethodID method_getObject { ::mandolin::jniGetMethodID(clazz.get(), "getObject", "(I)") };
 	const jmethodID method_getType { ::mandolin::jniGetMethodID(clazz.get(), "getType", "(I)") };
 	const jmethodID method_pushNull { ::mandolin::jniGetMethodID(clazz.get(), "pushNull", "()V") };
@@ -70,10 +70,10 @@ private:
 	const jmethodID method_pushDouble { ::mandolin::jniGetMethodID(clazz.get(), "pushDouble", "(D)V") };
 	const jmethodID method_pushInt { ::mandolin::jniGetMethodID(clazz.get(), "pushInt", "(I)V") };
 	const jmethodID method_pushString { ::mandolin::jniGetMethodID(clazz.get(), "pushString", "(Ljava/lang/String;)V") };
-	const jmethodID method_pushArray { ::mandolin::jniGetMethodID(clazz.get(), "pushArray", "(Lco/zenturi/mandolin/xnative/JavascriptArray;)V") };
-	const jmethodID method_pushMap { ::mandolin::jniGetMethodID(clazz.get(), "pushMap", "(Lco/zenturi/mandolin/xnative/JavascriptMap;)V") };
-	const jmethodID method_pushObject { ::mandolin::jniGetMethodID(clazz.get(), "pushObject", "(Lco/zenturi/mandolin/xnative/JavascriptObject;)V") };
-	const jmethodID method_append { ::mandolin::jniGetMethodID(clazz.get(), "append", "(Lco/zenturi/mandolin/xnative/JavascriptArray;)V") };
+	const jmethodID method_pushArray { ::mandolin::jniGetMethodID(clazz.get(), "pushArray", "(Lco/zenturi/mandolin/xnative/react/JavascriptArray;)V") };
+	const jmethodID method_pushMap { ::mandolin::jniGetMethodID(clazz.get(), "pushMap", "(Lco/zenturi/mandolin/xnative/react/JavascriptMap;)V") };
+	const jmethodID method_pushObject { ::mandolin::jniGetMethodID(clazz.get(), "pushObject", "(Lco/zenturi/mandolin/xnative/react/JavascriptObject;)V") };
+	const jmethodID method_append { ::mandolin::jniGetMethodID(clazz.get(), "append", "(Lco/zenturi/mandolin/xnative/react/JavascriptArray;)V") };
 };
 
 } // namespace mandolin_generated 

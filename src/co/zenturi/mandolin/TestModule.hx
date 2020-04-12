@@ -7,6 +7,7 @@ import co.zenturi.mandolin.xnative.*;
 @:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind(true))
 @:keep
 @:unreflective
+@:nativeGen
 class TestModule {
 
     @:isVar public var value(get, set):String;

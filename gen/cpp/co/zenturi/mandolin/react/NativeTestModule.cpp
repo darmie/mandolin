@@ -28,7 +28,6 @@ namespace mandolin_generated {
 		try {
 			DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
 			const auto& ref = ::mandolin::objectFromHandleAddress<::TestModule>(nativeRef);
-			ref->__new(::mandolin::I32::toCpp(jniEnv, j_x));
 		} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 	}
 

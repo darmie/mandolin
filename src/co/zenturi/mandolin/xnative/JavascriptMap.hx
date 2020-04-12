@@ -1,106 +1,157 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
-#if java
+#if java 
+
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-#elseif !macro
+
+import co.zenturi.mandolin.xnative.JavascriptObject.IJavascriptObject;
+import co.zenturi.mandolin.xnative.JavascriptArray.IJavascriptArray;
+import co.zenturi.mandolin.xnative.JavascriptMapKeyIterator.IJavascriptMapKeyIterator;
+
+@:native('co.zenturi.mandolin.xnative.react.JavascriptMap')
+extern class IJavascriptMap {
+    
+	@:native('hasKey')
+	public function hasKey(name:String):Bool;
+	@:native('isNull')
+	public function isNull(name:String):Bool;
+	@:native('getBoolean')
+	public function getBoolean(name:String):Bool;
+	@:native('getDouble')
+	public function getDouble(name:String):Float;
+	@:native('getInt')
+	public function getInt(name:String):Int;
+	@:native('getString')
+	public function getString(name:String):String;
+	@:native('getArray')
+	public function getArray(name:String):IJavascriptArray;
+	@:native('getMap')
+	public function getMap(name:String):IJavascriptMap;
+	@:native('getObject')
+	public function getObject(name:String):IJavascriptObject;
+	@:native('getType')
+	public function getType(?name:String):JavascriptType;
+	@:native('keySetIterator')
+	public function keySetIterator():IJavascriptMapKeyIterator;
+	@:native('putNull')
+	public function putNull(key:String):Void;
+	@:native('putBoolean')
+	public function putBoolean(key:String, value:Bool):Void;
+	@:native('putDouble')
+	public function putDouble(key:String, value:Float):Void;
+	@:native('putInt')
+	public function putInt(key:String, value:Int):Void;
+	@:native('putString')
+	public function putString(key:String, value:String):Void;
+	@:native('putArray')
+	public function putArray(key:String, value:IJavascriptArray):Void;
+	@:native('putMap')
+	public function putMap(key:String, value:IJavascriptMap):Void;
+	@:native('putObject')
+	public function putObject(key:String, value:IJavascriptObject):Void;
+	@:native('merge')
+	public function merge(source:IJavascriptMap):Void;
+}
+
+
 @:build(co.zenturi.mandolin.macros.JNI.bind())
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
-#end
+@dep("com.facebook.react.bridge.*")
+@:nativeGen
 @:keep
-class JavascriptMap {
-	private var mReadableMap:#if java ReadableMap #else Dynamic #end;
-	private var mWritableMap:#if java WritableMap #else Dynamic #end;
+class JavascriptMap extends IJavascriptMap {
+	
+	private var mReadableMap:ReadableMap;
+	private var mWritableMap:WritableMap;
+	
 
-	#if java
+
 	public function new(?map:ReadableMap) {
-		mWritableMap = map != null ? map : Arguments.createMap();
-		mReadableMap = map != null ? null : mWritableMap;
+		mWritableMap = map != null ? null : Arguments.createMap();
+		mReadableMap = map != null ? map : cast mWritableMap;
 	}
-    #else 
-    public function new() {
-        
-    }
-    #end
+	
+    
 
-	public function hasKey(name:String):Bool {
+	override public function hasKey(name:String):Bool {
 		return mReadableMap.hasKey(name);
 	}
 
-	public function isNull(name:String):Bool {
+	override public function isNull(name:String):Bool {
 		return mReadableMap.isNull(name);
 	}
 
-	public function getBoolean(name:String):Bool {
-		return mReadableMap.getBool(name);
+	override public function getBoolean(name:String):Bool {
+		return mReadableMap.getBoolean(name);
 	}
 
-	public function getDouble(name:String):Float {
+	override public function getDouble(name:String):Float {
 		return mReadableMap.getDouble(name);
 	}
 
-	public function getInt(name:String):Int {
+	override public function getInt(name:String):Int {
 		return mReadableMap.getInt(name);
 	}
 
-	public function getString(name:String):String {
+	override public function getString(name:String):String {
 		return mReadableMap.getString(name);
 	}
 
-	public function getArray(name:String):MandolinObject<JavascriptArray> {
+	override public function getArray(name:String):IJavascriptArray {
 		return MandolinReact.wrap(mReadableMap.getArray(name));
 	}
 
-	public function getMap(name:String):MandolinObject<JavascriptMap> {
+	override public function getMap(name:String):IJavascriptMap {
 		return MandolinReact.wrap(mReadableMap.getMap(name));
 	}
 
-	public function getObject(name:String):MandolinObject<JavascriptObject> {
+	override public function getObject(name:String):IJavascriptObject {
 		return MandolinReact.wrap(mReadableMap.getDynamic(name));
 	}
 
-	public function getType(?name:String):JavascriptType {
+	override public function getType(?name:String):JavascriptType {
 		return MandolinReact.wrap(mReadableMap.getType(name));
 	}
 
-	public function keySetIterator():MandolinObject<JavascriptMapKeyIterator> {
+	override public function keySetIterator():IJavascriptMapKeyIterator {
 		return MandolinReact.wrap(mReadableMap.keySetIterator());
 	}
 
-	public function putNull(key:String):Void {
+	override public function putNull(key:String):Void {
 		mWritableMap.putNull(key);
 	}
 
-	public function putBoolean(key:String, value:Bool):Void {
+	override public function putBoolean(key:String, value:Bool):Void {
 		mWritableMap.putBoolean(key, value);
 	}
 
-	public function putDouble(key:String, value:Float):Void {
+	override public function putDouble(key:String, value:Float):Void {
 		mWritableMap.putDouble(key, value);
 	}
 
-	public function putInt(key:String, value:Int):Void {
+	override public function putInt(key:String, value:Int):Void {
 		mWritableMap.putInt(key, value);
 	}
 
-	public function putString(key:String, value:String):Void {
+	override public function putString(key:String, value:String):Void {
 		mWritableMap.putString(key, value);
 	}
 
-	public function putArray(key:String, value:MandolinObject<JavascriptArray>):Void {
-        var _value:JavascriptArray = value;
+	override public function putArray(key:String, value:IJavascriptArray):Void {
+        var _value:JavascriptArray = cast value;
 		mWritableMap.putArray(key, MandolinReact.unwrap(_value));
 	}
 
-	public function putMap(key:String, value:MandolinObject<JavascriptMap>):Void {
-        var _value:JavascriptMap = value;
+	override public function putMap(key:String, value:IJavascriptMap):Void {
+        var _value:JavascriptMap = cast value;
 		mWritableMap.putMap(key, MandolinReact.unwrap(_value));
 	}
 
-	public function putObject(key:String, value:MandolinObject<JavascriptObject>):Void {
-		var _value:JavascriptObject = value;
+	override public function putObject(key:String, value:IJavascriptObject):Void {
+		var _value:JavascriptObject = cast value;
 		var type:JavascriptType = _value.getType();
 		switch (type) {
 			case JavascriptType.ARRAY:
@@ -123,20 +174,19 @@ class JavascriptMap {
 		}
 	}
 
-	public function merge(source:MandolinObject<JavascriptMap>):Void {
-		var _s:JavascriptMap = source;
-		#if java mWritableMap.merge(_s.getReadableMap()); #end
+	override public function merge(source:IJavascriptMap):Void {
+		var _s:JavascriptMap = cast source;
+		mWritableMap.merge(_s.getReadableMap()); 
 	}
 
-	#if java
-	public function getReadableMap():#if java ReadableMap #else Dynamic #end {
+
+	@ignore public function getReadableMap(): ReadableMap {
 		return mReadableMap;
 	}
 
-	public function getWritableMap():#if java WritableMap #else Dynamic #end {
+	@ignore public function getWritableMap():WritableMap {
 		return mWritableMap;
 	}
-	#end
 }
 #elseif cpp
 @:headerCode('
@@ -195,6 +245,7 @@ public:
 };
 ')
 @:keep 
+@:nativeGen
 interface IJavascriptMap {}
 @:include('co/zenturi/mandolin/xnative/IJavascriptArray.h')
 @:include('co/zenturi/mandolin/xnative/IJavascriptMap.h')

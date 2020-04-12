@@ -31,14 +31,14 @@ private:
 		public:
 			JavaProxy(JniType j);
 			~JavaProxy();
-			std::shared_ptr<Job> poll() override;
+			std::shared_ptr<::Job> poll() override;
 			void interruptPoll() override;
 		private:
-		friend ::mandolin::JniInterface<::JobQueue, ::mandolin_generated::NativeJobQueue>;
+			friend ::mandolin::JniInterface<::JobQueue, ::mandolin_generated::NativeJobQueue>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/JobQueue") };
-	const jmethodID method_poll { ::mandolin::jniGetMethodID(clazz.get(), "poll", "()Lco/zenturi/mandolin/xnative/Job;") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/JobQueue") };
+	const jmethodID method_poll { ::mandolin::jniGetMethodID(clazz.get(), "poll", "()") };
 	const jmethodID method_interruptPoll { ::mandolin::jniGetMethodID(clazz.get(), "interruptPoll", "()V") };
 };
 

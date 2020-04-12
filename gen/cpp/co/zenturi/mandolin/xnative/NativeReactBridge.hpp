@@ -31,25 +31,25 @@ private:
 		public:
 			JavaProxy(JniType j);
 			~JavaProxy();
-			std::shared_ptr<JavascriptMap> createMap() override;
-			std::shared_ptr<JavascriptArray> createArray() override;
-			std::shared_ptr<JavascriptMap> copyMap(const std::shared_ptr<JavascriptMap> & m) override;
-			std::shared_ptr<JavascriptArray> copyArray(const std::shared_ptr<JavascriptArray> & a) override;
-			void emitEventWithMap(const std::string & name, const std::shared_ptr<JavascriptMap> & params) override;
-			void emitEventWithArray(const std::string & name, const std::shared_ptr<JavascriptArray> & params) override;
-			std::shared_ptr<JobDispatcher> createJobDispatcher(const std::shared_ptr<JobQueue> & queue) override;
+			std::shared_ptr<::JavascriptMap> createMap() override;
+			std::shared_ptr<::JavascriptArray> createArray() override;
+			std::shared_ptr<::JavascriptMap> copyMap(const std::shared_ptr<::JavascriptMap> & m) override;
+			std::shared_ptr<::JavascriptArray> copyArray(const std::shared_ptr<::JavascriptArray> & a) override;
+			void emitEventWithMap(const std::string & name, const std::shared_ptr<::JavascriptMap> & params) override;
+			void emitEventWithArray(const std::string & name, const std::shared_ptr<::JavascriptArray> & params) override;
+			std::shared_ptr<::JobDispatcher> createJobDispatcher(const std::shared_ptr<::JobQueue> & queue) override;
 		private:
-		friend ::mandolin::JniInterface<::ReactBridge, ::mandolin_generated::NativeReactBridge>;
+			friend ::mandolin::JniInterface<::ReactBridge, ::mandolin_generated::NativeReactBridge>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/ReactBridge") };
-	const jmethodID method_createMap { ::mandolin::jniGetMethodID(clazz.get(), "createMap", "()Lco/zenturi/mandolin/xnative/JavascriptMap;") };
-	const jmethodID method_createArray { ::mandolin::jniGetMethodID(clazz.get(), "createArray", "()Lco/zenturi/mandolin/xnative/JavascriptArray;") };
-	const jmethodID method_copyMap { ::mandolin::jniGetMethodID(clazz.get(), "copyMap", "(Lco/zenturi/mandolin/xnative/JavascriptMap;)Lco/zenturi/mandolin/xnative/JavascriptMap;") };
-	const jmethodID method_copyArray { ::mandolin::jniGetMethodID(clazz.get(), "copyArray", "(Lco/zenturi/mandolin/xnative/JavascriptArray;)Lco/zenturi/mandolin/xnative/JavascriptArray;") };
-	const jmethodID method_emitEventWithMap { ::mandolin::jniGetMethodID(clazz.get(), "emitEventWithMap", "(Ljava/lang/String; Lco/zenturi/mandolin/xnative/JavascriptMap;)V") };
-	const jmethodID method_emitEventWithArray { ::mandolin::jniGetMethodID(clazz.get(), "emitEventWithArray", "(Ljava/lang/String; Lco/zenturi/mandolin/xnative/JavascriptArray;)V") };
-	const jmethodID method_createJobDispatcher { ::mandolin::jniGetMethodID(clazz.get(), "createJobDispatcher", "(Lco/zenturi/mandolin/xnative/JobQueue;)Lco/zenturi/mandolin/xnative/JobDispatcher;") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/ReactBridge") };
+	const jmethodID method_createMap { ::mandolin::jniGetMethodID(clazz.get(), "createMap", "()") };
+	const jmethodID method_createArray { ::mandolin::jniGetMethodID(clazz.get(), "createArray", "()") };
+	const jmethodID method_copyMap { ::mandolin::jniGetMethodID(clazz.get(), "copyMap", "()") };
+	const jmethodID method_copyArray { ::mandolin::jniGetMethodID(clazz.get(), "copyArray", "()") };
+	const jmethodID method_emitEventWithMap { ::mandolin::jniGetMethodID(clazz.get(), "emitEventWithMap", "(Ljava/lang/String; )V") };
+	const jmethodID method_emitEventWithArray { ::mandolin::jniGetMethodID(clazz.get(), "emitEventWithArray", "(Ljava/lang/String; )V") };
+	const jmethodID method_createJobDispatcher { ::mandolin::jniGetMethodID(clazz.get(), "createJobDispatcher", "()") };
 };
 
 } // namespace mandolin_generated 

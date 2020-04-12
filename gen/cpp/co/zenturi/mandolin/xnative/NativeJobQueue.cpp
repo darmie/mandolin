@@ -13,7 +13,7 @@ NativeJobQueue::JavaProxy::JavaProxy(JniType j) : Handle(::mandolin::jniGetThrea
 
 NativeJobQueue::::JavaProxy::~JavaProxy() = default;
 
-std::shared_ptr<Job> NativeJobQueue::JavaProxy::poll() {
+std::shared_ptr<::Job> NativeJobQueue::JavaProxy::poll() {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJobQueue>::get();

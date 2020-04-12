@@ -33,10 +33,10 @@ private:
 			~JavaProxy();
 			void run() override;
 		private:
-		friend ::mandolin::JniInterface<::Job, ::mandolin_generated::NativeJob>;
+			friend ::mandolin::JniInterface<::Job, ::mandolin_generated::NativeJob>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/Job") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/Job") };
 	const jmethodID method_run { ::mandolin::jniGetMethodID(clazz.get(), "run", "()V") };
 };
 

@@ -77,7 +77,7 @@ std::shared_ptr<JavascriptMap> NativeJavascriptMap::JavaProxy::getMap(const std:
 	::mandolin::jniExceptionCheck(jniEnv);
 	return ::mandolin_generated::NativeJavascriptMap:toCpp(jniEnv, ret);
 }
-std::shared_ptr<JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(const std::string & name) {
+std::shared_ptr<::JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(const std::string & name) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
@@ -93,13 +93,13 @@ std::shared_ptr<JavascriptObject> NativeJavascriptMap::JavaProxy::getObject(cons
 	::mandolin::jniExceptionCheck(jniEnv);
 	return null;
 }
-std::shared_ptr<JavascriptMapKeyIterator> NativeJavascriptMap::JavaProxy::keySetIterator() {
+ NativeJavascriptMap::JavaProxy::keySetIterator() {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
 	auto ret = jniEnv->CallObjectMethod(Handle::get().get(), data.method_keySetIterator);
 	::mandolin::jniExceptionCheck(jniEnv);
-	return ::mandolin_generated::NativeJavascriptMapKeyIterator:toCpp(jniEnv, ret);
+	return null;
 }
 void NativeJavascriptMap::JavaProxy::putNull(const std::string & key) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
@@ -140,28 +140,28 @@ void NativeJavascriptMap::JavaProxy::putArray(const std::string & key, const std
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putArray, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptArray:fromCpp(jniEnv, value));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putArray, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptArray::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 void NativeJavascriptMap::JavaProxy::putMap(const std::string & key, const std::shared_ptr<JavascriptMap> & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putMap, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, value));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putMap, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptMap::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptMap::JavaProxy::putObject(const std::string & key, const std::shared_ptr<JavascriptObject> & value) {
+void NativeJavascriptMap::JavaProxy::putObject(const std::string & key, const std::shared_ptr<::JavascriptObject> & value) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putObject, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptObject:fromCpp(jniEnv, value));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_putObject, ::mandolin::String::fromCpp(jniEnv, key), , ::mandolin_generated::NativeJavascriptObject::fromCpp(jniEnv, value));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 void NativeJavascriptMap::JavaProxy::merge(const std::shared_ptr<JavascriptMap> & source) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptMap>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_merge, ::mandolin_generated::NativeJavascriptMap:fromCpp(jniEnv, source));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_merge, ::mandolin_generated::NativeJavascriptMap::fromCpp(jniEnv, source));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 }

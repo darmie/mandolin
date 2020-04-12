@@ -1,8 +1,8 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
-@:build(co.zenturi.mandolin.macros.JNI.bind())
+#if java 
 @:keep
+@:nativeGen
 enum JavascriptType {
     NIL;
     BOOLEAN;
@@ -37,6 +37,7 @@ struct hash<::JavascriptType> {
 } // namespace std
 ')
 @:keep
+@:nativeGen
 interface IJavascriptType{}
 @:include('co/zenturi/mandolin/xnative/IJavascriptType.h')
 @:native('::JavascriptType')

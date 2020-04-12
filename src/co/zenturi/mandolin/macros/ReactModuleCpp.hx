@@ -185,20 +185,23 @@ class ReactModuleCpp {
 						sbuf.add('\t\ttry {\n');
 						sbuf.add('\t\t\tDJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);\n');
 						sbuf.add('\t\t\tconst auto& ref = ::mandolin::objectFromHandleAddress<::$_name>(nativeRef);\n');
-						
-						if(fname == "new") sbuf.add('\t\t\tref->__new(');
-						else sbuf.add('\t\t\tref->$fname(');
 
-						for (i in 0...params.length) {
-							var param = params[i];
-							var pname = param[0];
-							var ptype = param[1];
-							sbuf.add(transformParams(ptype, pname));
-							if (i < params.length - 1) {
-								sbuf.add(',\n\t\t\t ');
+						if (fname == "new") {
+							// sbuf.add('\t\t\tref->__new(');
+						} else
+							sbuf.add('\t\t\tref->$fname(');
+						if (fname != "new") {
+							for (i in 0...params.length) {
+								var param = params[i];
+								var pname = param[0];
+								var ptype = param[1];
+								sbuf.add(transformParams(ptype, pname));
+								if (i < params.length - 1) {
+									sbuf.add(',\n\t\t\t ');
+								}
 							}
+							sbuf.add(');\n');
 						}
-						sbuf.add(');\n');
 						sbuf.add('\t\t} JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )\n');
 						sbuf.add('\t}\n\n');
 					}
@@ -300,25 +303,24 @@ class ReactModuleCpp {
 							imports.push(impName);
 						}
 
-					if (f.ret != null) {
-						switch f.ret {
-							case TPath(p): {
-									switch p.name {
-										case "Void":
-										case _: {
-												impName = '#include <NativeJavascriptPromise.hpp>\n';
+						if (f.ret != null) {
+							switch f.ret {
+								case TPath(p): {
+										switch p.name {
+											case "Void":
+											case _: {
+													impName = '#include <NativeJavascriptPromise.hpp>\n';
 
-												if (imports.indexOf(impName) == -1) {
-													imports.push(impName);
+													if (imports.indexOf(impName) == -1) {
+														imports.push(impName);
+													}
 												}
-											}
+										}
 									}
-									
-								}
-							case _:
+								case _:
+							}
 						}
 					}
-				}
 				case _:
 			}
 		}
@@ -474,8 +476,8 @@ class ReactModuleCpp {
 						funcs.push(') {\n');
 
 						if (fname == 'new') {
-							funcs.push('\t\tthis->ref = ${_package.replace("/", "::")}::${_name}_obj::');
-							funcs.push('__new');
+							// funcs.push('\t\tthis->ref = ${_package.replace("/", "::")}::${_name}_obj::');
+							// funcs.push('__new');
 						} else {
 							if (hasPromise)
 								funcs.push('\t\tauto ret = ');
@@ -484,32 +486,34 @@ class ReactModuleCpp {
 							funcs.push('ref->');
 							funcs.push('${field.name}');
 						}
-						funcs.push('(');
+						if (fname != 'new') {
+							funcs.push('(');
 
-						for (i in 0...params.length) {
-							var param = params[i];
-							var pname = param[0];
-							var ptype = param[1];
-							if (ptype != "const std::shared_ptr<::JavascriptPromise>") {
-								if (ptype != "const std::shared_ptr<::JavascriptCallback> &") {
-									// funcs.push('(::JavascriptObjectImpl($pname)).asHaxeObject()');
-									switch ptype {
-										case 'const std::string': funcs.push('$pname.c_str()');
-										// case 'std::shared_ptr<::JavascriptArray> &':
-										case _: funcs.push(pname);
+							for (i in 0...params.length) {
+								var param = params[i];
+								var pname = param[0];
+								var ptype = param[1];
+								if (ptype != "const std::shared_ptr<::JavascriptPromise>") {
+									if (ptype != "const std::shared_ptr<::JavascriptCallback> &") {
+										// funcs.push('(::JavascriptObjectImpl($pname)).asHaxeObject()');
+										switch ptype {
+											case 'const std::string': funcs.push('$pname.c_str()');
+											// case 'std::shared_ptr<::JavascriptArray> &':
+											case _: funcs.push(pname);
+										}
+									} else {
+										funcs.push('$pname');
 									}
-								} else {
-									funcs.push('$pname');
+
+									// params.pop();
 								}
 
-								// params.pop();
+								if (i < params.length - 2) {
+									funcs.push(', ');
+								}
 							}
-
-							if (i < params.length - 2) {
-								funcs.push(', ');
-							}
+							funcs.push(');\n');
 						}
-						funcs.push(');\n');
 						if (hasPromise) {
 							funcs.push('\t\tpromise->');
 							var returnType = f.ret;
@@ -566,7 +570,7 @@ class ReactModuleCpp {
 
 		sbuf.add('public:\n');
 		sbuf.add('');
-		sbuf.add('\thx::ObjectPtr< ${_package.replace("/", "::")}::${_name}_obj > ref;\n');
+		sbuf.add('\thx::ObjectPtr< ${_package.replace("/", "::")}::${_name} > ref;\n');
 
 		sbuf.add('\t$_name(const std::shared_ptr< ::ReactBridge > & bridge){};\n');
 		sbuf.add('\t~$_name(){};\n');

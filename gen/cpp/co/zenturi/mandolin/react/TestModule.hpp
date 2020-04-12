@@ -25,14 +25,13 @@ class JavascriptMap;
 
 class TestModule  {
 public:
-	hx::ObjectPtr< co::zenturi::mandolin::TestModule_obj > ref;
+	hx::ObjectPtr< co::zenturi::mandolin::TestModule > ref;
 	TestModule(const std::shared_ptr< ::ReactBridge > & bridge){};
 	~TestModule(){};
 	static std::shared_ptr<TestModule> create(const std::shared_ptr< ::ReactBridge > & bridge) {
 		return std::make_shared<TestModule>(bridge);
 	}
 	void __new(const int32_t x) {
-		this->ref = co::zenturi::mandolin::TestModule_obj::__new(x);
 	}
 	void doSomething() {
 		ref->doSomething();

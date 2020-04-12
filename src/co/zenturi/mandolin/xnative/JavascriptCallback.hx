@@ -1,40 +1,50 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
-#if java
+#if java 
 import com.facebook.react.bridge.Callback;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-#end
 
+import co.zenturi.mandolin.xnative.JavascriptObject.IJavascriptObject;
+
+@:native('co.zenturi.mandolin.xnative.react.JavascriptCallback')
+extern class IJavascriptCallback {
+    @:native('invoke')
+    public function invoke(args: java.NativeArray<IJavascriptObject>):Void;
+
+    @:native('invokeSingleArg')
+    public function invokeSingleArg(o:IJavascriptObject):Void;
+
+}
+
+@:build(co.zenturi.mandolin.macros.JNI.bind())
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
+@dep("com.facebook.react.bridge.*")
 @:keep
-class JavascriptCallback {
-    private var mCallback: #if java Callback #else Dynamic #end;
-    public function new(callback:#if java Callback #else Dynamic #end) {
+@:nativeGen
+class JavascriptCallback extends IJavascriptCallback {
+    private var mCallback: Callback;
+
+
+    public function new(callback:Callback) {
         mCallback = callback;
     }
 
-    public function invoke(args: #if java ArrayList<JavascriptObject> #else Array<JavascriptObject> #end):Void {
-        #if java
-        var javaArgs = new ArrayList<JavascriptObject>(args.length);
+    override public function invoke(args: java.NativeArray<IJavascriptObject>):Void {
+        var javaArgs:java.util.List<IJavascriptObject> = new java.util.ArrayList<IJavascriptObject>();
         var i = 0;
         for(o in args){
-            javaArgs[i] = MandolinReact.unwrap(o);
+            javaArgs.add(MandolinReact.unwrap(o));
             i++;
         }
 
-        mCallback.invoke(javaArgs);
-        #end
+        mCallback.invoke(javaArgs.toArray());
     }
 
-    public function invokeSingleArg(o:MandolinObject<JavascriptObject>):Void {
-        #if java
-        var args:ArrayList<JavascriptObject> = new ArrayList<JavascriptObject>();
-        args.add(0, o);
+    override public function invokeSingleArg(o:IJavascriptObject):Void {
+        var args:java.NativeArray<IJavascriptObject> = java.NativeArray.make(o);
+
         invoke(args);
-        #end
     }
 }
 #elseif cpp
@@ -54,6 +64,7 @@ public:
 };
 ')
 @:keep
+@:nativeGen
 interface IJavascriptCallback {
 
 }

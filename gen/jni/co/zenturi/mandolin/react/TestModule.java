@@ -3,7 +3,7 @@
 
 package co.zenturi.mandolin.react;
 
-import co.zenturi.madolin.xnative.react.*;
+import co.zenturi.mandolin.xnative.react.*;
 import com.facebook.react.bridge.*;
 import com.facebook.react.module.annotations.ReactModule;
 import java.util.HashMap;
@@ -17,14 +17,18 @@ public final class TestModule extends ReactContextBaseJavaModule {
 
 	public TestModule(ReactApplicationContext reactContext){
 		super(reactContext);
-		mModule = create(Mandolin.createReactBridge(reactContext));
+		mModule = create(MandolinReact.createReactBridge(reactContext));
 	}
 
-	private static native CppProxy create(co.zenturi.mandolin.ReactBridge bridge);
+	private static native CppProxy create(co.zenturi.mandolin.xnative.react.ReactBridge bridge);
+	public String getName(){
+
+			return "TestModule";
+		}
 
 	@ReactMethod
 	public void init(int x){
-		mModule.init(x);
+		mModule.init((int)x);
 	}
 
 
@@ -36,37 +40,37 @@ public final class TestModule extends ReactContextBaseJavaModule {
 
 	@ReactMethod
 	public void getValue(Promise promise){
-		mModule.getValue(MandolinReact.wrap(promise));
+		mModule.getValue((JavascriptPromise)MandolinReact.wrap((Promise) promise));
 	}
 
 
 	@ReactMethod
 	public void setValue(String value, Promise promise){
-		mModule.setValue(value, MandolinReact.wrap(promise));
+		mModule.setValue((String)value, (JavascriptPromise)MandolinReact.wrap((Promise) promise));
 	}
 
 
 	@ReactMethod
 	public void setUpdate(Callback callback){
-		mModule.setUpdate(MandolinReact.wrap(callback));
+		mModule.setUpdate((JavascriptCallback)MandolinReact.wrap((Callback) callback));
 	}
 
 
 	@ReactMethod
 	public void add(int x, long y, Promise promise){
-		mModule.add(x, y, MandolinReact.wrap(promise));
+		mModule.add((int)x, (long)y, (JavascriptPromise)MandolinReact.wrap((Promise) promise));
 	}
 
 
 	@ReactMethod
-	public void testArray(ReadableArray arr, Promise promise){
-		mModule.testArray(MandolinReact.wrap(arr), MandolinReact.wrap(promise));
+	public void testArray(JavascriptArray arr, Promise promise){
+		mModule.testArray((JavascriptArray)arr, (JavascriptPromise)MandolinReact.wrap((Promise) promise));
 	}
 
 
 	@ReactMethod
-	public void testMap(ReadableMap map, Promise promise){
-		mModule.testMap(MandolinReact.wrap(map), MandolinReact.wrap(promise));
+	public void testMap(JavascriptMap map, Promise promise){
+		mModule.testMap((JavascriptMap)map, (JavascriptPromise)MandolinReact.wrap((Promise) promise));
 	}
 
 
@@ -85,7 +89,7 @@ public final class TestModule extends ReactContextBaseJavaModule {
 			if (!destroyed) nativeDestroy(this.nativeRef);
 		}
 
-		protected void finalize(){
+		protected void finalize() throws java.lang.Throwable {
 			destroy();
 			super.finalize();
 		}

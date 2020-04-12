@@ -21,9 +21,10 @@ class JNI {
 	 * Create JNI Native bindings in CPP
 	 * @return Array<Field>
 	 */
-	macro static function bind():Array<Field> {
+	macro static function bind(hasProxy:Bool = false):Array<Field> {
 		var pack = Context.getLocalModule();
-		// (new Builder.HxmlBuilder()).push(pack);
+		var fields:Array<Field> = Context.getBuildFields();
+		JNIClassGen.init(pack, fields, hasProxy);
 		return null;
 	}
 
@@ -67,7 +68,7 @@ class JNI {
 		var dir = Sys.getCwd();
 
 		var pack = Context.getLocalModule();
-		(new Builder.HxmlBuilder()).push(pack);
+	
 		var pathLength = pack.split(".").length;
 		var unpack = pack.split(".");
 		var packPath = unpack.slice(0, pathLength - 1).join("/");
@@ -135,6 +136,14 @@ class JNI {
 			switch field.kind {
 				case FFun(f):
 					{
+						var hasIgnore = false; 
+						for (meta in field.meta){
+							if(meta.name == "ignore"){
+								hasIgnore = true;
+							}
+						}
+						if(hasIgnore) continue;
+
 						var impName = "";
 						var re = ~/([-_][a-z])/;
 						var fname = field.name;
@@ -178,12 +187,15 @@ class JNI {
 												case "Int64": argType = "int64_t"; paramGetters.push('::mandolin::I64::fromCpp(jniEnv, $argName)');
 												case "Float": argType = "double"; paramGetters.push('::mandolin::F64::fromCpp(jniEnv, $argName)');
 												case "Bool": argType = "bool"; paramGetters.push('::mandolin::Bool::fromCpp(jniEnv, $argName)');
-												case "JavascriptArray": argType = "const std::shared_ptr<JavascriptArray> &";
-												case "JavascriptMap": argType = "const std::shared_ptr<JavascriptMap> &";
-												case "JavascriptCallback": argType = "const std::shared_ptr<JavascriptCallback> &";
-												case "JavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &";
+												case "IJavascriptArray": argType = "const std::shared_ptr<JavascriptArray> &"; paramGetters.push('::mandolin_generated::NativeJavascriptArray::fromCpp(jniEnv, $argName)');
+												case "IJavascriptMap": argType = "const std::shared_ptr<JavascriptMap> &"; paramGetters.push('::mandolin_generated::NativeJavascriptMap::fromCpp(jniEnv, $argName)');
+												case "IJavascriptCallback": argType = "const std::shared_ptr<JavascriptCallback> &"; paramGetters.push('::mandolin_generated::NativeJavascriptCallback::fromCpp(jniEnv, $argName)');
+												case "IJavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &"; paramGetters.push('::mandolin_generated::NativeJavascriptObject::fromCpp(jniEnv, $argName)');
+												case "IJobDispatcher": argType = "const std::shared_ptr<::JobDispatcher> &"; paramGetters.push('::mandolin_generated::NativeJobDispatcher::fromCpp(jniEnv, $argName)');
+												case "IJob": argType = "const std::shared_ptr<::Job> &"; paramGetters.push('::mandolin_generated::NativeJob::fromCpp(jniEnv, $argName)');
+												case "JobQueue": argType = "const std::shared_ptr<::JobQueue> &"; paramGetters.push('::mandolin_generated::NativeJobQueue::fromCpp(jniEnv, $argName)');
 												case "JavascriptType": argType = "::JavascriptType";
-												case "Array": {
+												case "Array" | "ArrayList" | "NativeArray": {
 														var _type = "";
 														var getter = "";
 														var rec = null;
@@ -200,8 +212,16 @@ class JNI {
 																							case "Int64": _type = 'std::vector<int64_t> &'; getter = '::mandolin::List<::mandolin::I64>::fromCpp(jniEnv, $argName)';
 																							case "Float": _type = 'std::vector<double> &'; getter = '::mandolin::List<::mandolin::F64>::fromCpp(jniEnv, $argName)';
 																							case "Bool": _type = 'std::vector<bool> &'; getter = '::mandolin::List<::mandolin::Bool>::fromCpp(jniEnv, $argName)';
-																							case "Array": _type = 'std::vector<${rec().type}> &'; getter = '::mandolin::List<${rec().getter}>::fromCpp(jniEnv, $argName)';
-																							case _: _type = 'std::vector< std::shared_ptr<${p.name}> > &'; getter = '::mandolin::List<::mandolin_generated::Native${p.name}>::fromCpp(jniEnv, $argName)';
+																							case "Array" | "ArrayList" | "NativeArray": _type = 'std::vector<${rec().type}> &'; getter = '::mandolin::List<${rec().getter}>::fromCpp(jniEnv, $argName)';
+																							case _: {
+																								_type = 'std::vector< ${getCppTypes(p.name)} > &'; 
+																								getter = '::mandolin::List<::mandolin_generated::Native${p.name}>::fromCpp(jniEnv, $argName)';
+																								if(p.name.startsWith("I")){
+																									getter = '::mandolin::List<::mandolin_generated::Native${p.name.substring(1)}>:fromCpp(jniEnv, $argName)';
+																								} else {
+																									getter = '::mandolin::List<::mandolin_generated::Native${p.name}>:fromCpp(jniEnv, $argName)';
+																								}
+																							}
 																						}
 																					}
 																				case _:
@@ -259,12 +279,15 @@ class JNI {
 												case "Float": _type = "double"; retGetters.push('::mandolin::F64:toCpp(jniEnv, ret)');
 												case "Void": _type = "void"; hasReturn = false; 
 												case "Bool": _type = "bool"; retGetters.push('::mandolin::Bool:toCpp(jniEnv, ret)');
-												case "JavascriptArray": _type = "std::shared_ptr<JavascriptArray>";
-												case "JavascriptMap": _type = "std::shared_ptr<JavascriptMap>";
-												case "JavascriptCallback": _type = "std::shared_ptr<JavascriptCallback>";
-												case "JavascriptObject": _type = "std::shared_ptr<::JavascriptObject>";
+												case "IJavascriptArray": _type = "std::shared_ptr<JavascriptArray>"; retGetters.push('::mandolin_generated::NativeJavascriptArray:toCpp(jniEnv, ret)');
+												case "IJavascriptMap": _type = "std::shared_ptr<JavascriptMap>"; retGetters.push('::mandolin_generated::NativeJavascriptMap:toCpp(jniEnv, ret)');
+												case "IJavascriptCallback": _type = "std::shared_ptr<JavascriptCallback>"; retGetters.push('::mandolin_generated::NativeJavascriptCallback:toCpp(jniEnv, ret)');
+												case "IJavascriptObject": _type = "std::shared_ptr<::JavascriptObject>"; retGetters.push('::mandolin_generated::NativeJavascriptObject:toCpp(jniEnv, ret)');
+												case "IJob": _type = "std::shared_ptr<::Job>"; retGetters.push('::mandolin_generated::NativeJob:toCpp(jniEnv, ret)');
+												case "IJobDispatcher": _type = "std::shared_ptr<::JobDispatcher>"; retGetters.push('::mandolin_generated::NativeJobDispatcher:toCpp(jniEnv, ret)');
+												case "JobQueue": _type = "std::shared_ptr<::JobQueue>"; retGetters.push('::mandolin_generated::NativeJobQueue:toCpp(jniEnv, ret)');
 												case "JavascriptType": _type = "::JavascriptType";
-												case "Array": {
+												case "Array" | "ArrayList" | "NativeArray": {
 													var xtype = "";
 													var rtype = "";
 													var rec = null;
@@ -281,8 +304,16 @@ class JNI {
 																						case "Int64": xtype = 'std::vector<int64_t> &'; rtype = '::mandolin::List<::mandolin::I64>:toCpp(jniEnv, ret)';
 																						case "Float": xtype = 'std::vector<double> &'; rtype = '::mandolin::List<::mandolin::F64>:toCpp(jniEnv, ret)';
 																						case "Bool": xtype = 'std::vector<bool> &'; rtype = '::mandolin::List<::mandolin::Bool>:toCpp(jniEnv, ret)';
-																						case "Array": _type = 'std::vector<${rec().xtype}> &'; rtype = '::mandolin::List<${rec().rtype}>:toCpp(jniEnv, ret)';
-																						case _: xtype = 'std::vector< std::shared_ptr<${p.name}> > &'; rtype = '::mandolin::List<::mandolin_generated::Native${p.name}>:toCpp(jniEnv, ret)';
+																						case "Array" | "ArrayList" | "NativeArray": _type = 'std::vector<${getTypes(rec().xtype)}> &'; rtype = '::mandolin::List<${getTypes(rec().rtype)}>:toCpp(jniEnv, ret)';
+																						case _: {
+																							xtype = 'std::vector< ${getTypes(p.name)} > &'; 
+																							if(p.name.startsWith("I")){
+																								rtype = '::mandolin::List<::mandolin_generated::Native${p.name.substring(1)}>:toCpp(jniEnv, ret)';
+																							} else {
+																								rtype = '::mandolin::List<::mandolin_generated::Native${p.name}>:toCpp(jniEnv, ret)';
+																							}
+																							
+																						}
 																					}
 																				}
 																			case _:
@@ -364,10 +395,11 @@ class JNI {
 			case "Int64": "jlong";
 			case "Float": "jdouble";
 			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "JavascriptCallback": "::mandolin_generated::NativeJavascriptCallback::JniType";
-			case "JavascriptMap": "::mandolin_generated::NativeJavascriptMap::JniType";
-			case "JavascriptArray": "::mandolin_generated::NativeJavascriptArray::JniType";
-			case "JavascriptPromise": "::mandolin_generated::NativeJavascriptPromise::JniType";
+			case "IJavascriptCallback": "::mandolin_generated::NativeJavascriptCallback::JniType";
+			case "IJavascriptMap": "::mandolin_generated::NativeJavascriptMap::JniType";
+			case "IJavascriptArray": "::mandolin_generated::NativeJavascriptArray::JniType";
+			case "IJavascriptPromise": "::mandolin_generated::NativeJavascriptPromise::JniType";
+			case "IJavascriptMapKeyIterator": "::mandolin_generated::NativeJavascriptMapKeyIterator::JniType";
 			case "JavascriptType": "jint";
 			case _: throw "Type not supported";
 		}
@@ -379,11 +411,15 @@ class JNI {
 			case "Int" | "haxe.Int32": "int32_t";
 			case "Int64": "int64_t";
 			case "Float": "double";
-			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "JavascriptCallback": "std::shared_ptr<::JavascriptCallback> &";
-			case "JavascriptMap": "std::shared_ptr<::JavascriptMap> &";
-			case "JavascriptArray": "std::shared_ptr<::JavascriptArray> &";
-			case "JavascriptPromise": "std::shared_ptr<::JavascriptPromise> &";
+			case "IJavascriptCallback": "std::shared_ptr<::JavascriptCallback> &";
+			case "IJavascriptMap": "std::shared_ptr<::JavascriptMap> &";
+			case "IJavascriptObject": "std::shared_ptr<::JavascriptObject> &";
+			case "IJavascriptArray": "std::shared_ptr<::JavascriptArray> &";
+			case "IJavascriptPromise": "std::shared_ptr<::JavascriptPromise> &";
+			case "IJavascriptMapKeyIterator": "std::shared_ptr<::JavascriptMapKeyIterator> &";
+			case "IJob": "std::shared_ptr<::Job> &";
+			case "IJobDispatcher": "std::shared_ptr<::JobDispatcher> &";
+			case "JobQueue": "std::shared_ptr<::JobQueue> &";
 			case "JavascriptType": "::JavascriptObjectType";
 			case _: throw "Type not supported";
 		}
@@ -396,11 +432,15 @@ class JNI {
 			case "Int64": "int64_t";
 			case "Float": "double";
 			case "Bool": "bool";
-			// case "Event": "::mandolin_generated::NativeJavascriptEvent::JniType";
-			case "JavascriptCallback": "std::shared_ptr<::JavascriptCallback>";
-			case "JavascriptMap": "std::shared_ptr<::JavascriptMap>";
-			case "JavascriptArray": "std::shared_ptr<::JavascriptArray>";
-			case "JavascriptPromise": "std::shared_ptr<::JavascriptPromise>";
+			case "IJavascriptCallback": "std::shared_ptr<::JavascriptCallback>";
+			case "IJavascriptMap": "std::shared_ptr<::JavascriptMap>";
+			case "IJavascriptObject": "std::shared_ptr<::JavascriptObject>";
+			case "IJavascriptArray": "std::shared_ptr<::JavascriptArray>";
+			case "IJavascriptPromise": "std::shared_ptr<::JavascriptPromise>";
+			case "IJobDispatcher": "std::shared_ptr<::JobDispatcher>";
+			case "IJavascriptMapKeyIterator": "std::shared_ptr<::JavascriptMapKeyIterator>";
+			case "IJob": "std::shared_ptr<::Job>";
+			case "JobQueue": "std::shared_ptr<::JobQueue>";
 			case "JavascriptType": "::JavascriptObjectType";
 			case _: throw "Type not supported";
 		}
@@ -439,6 +479,14 @@ class JNI {
 			switch (field.kind) {
 				case FFun(f):
 					{
+						var hasIgnore = false; 
+						for (meta in field.meta){
+							if(meta.name == "ignore"){
+								hasIgnore = true;
+							}
+						}
+						if(hasIgnore) continue;
+
 						var impName = "";
 						var re = ~/([-_][a-z])/;
 						var fname = field.name;
@@ -481,13 +529,17 @@ class JNI {
 												case "Int64": argType = "int64_t";
 												case "Float": argType = "double";
 												case "Bool": argType = "bool";
-												case "JavascriptCallback": argType = "const std::shared_ptr<::JavascriptCallback> &";
-												case "JavascriptMap": argType = "const std::shared_ptr<::JavascriptMap> &";
-												case "JavascriptArray": argType = "const std::shared_ptr<::JavascriptArray> &";
-												case "JavascriptPromise": argType = "const std::shared_ptr<::JavascriptPromise> &";
-												case "JavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &";
+												case "IJavascriptCallback": argType = "const std::shared_ptr<::JavascriptCallback> &";
+												case "IJavascriptMap": argType = "const std::shared_ptr<::JavascriptMap> &";
+												case "IJavascriptArray": argType = "const std::shared_ptr<::JavascriptArray> &";
+												case "IJavascriptPromise": argType = "const std::shared_ptr<::JavascriptPromise> &";
+												case "IJavascriptObject": argType = "const std::shared_ptr<::JavascriptObject> &";
+												case "IJavascriptMapKeyIterator": argType = "const std::shared_ptr<::JavascriptMapKeyIterator> &";
+												case "IJobDispatcher": argType = "const std::shared_ptr<::JobDispatcher> &";
+												case "IJob": argType = "const std::shared_ptr<::Job> &";
+												case "JobQueue": argType = "const std::shared_ptr<::JobQueue> &";
 												case "JavascriptType": argType = "::JavascriptType";
-												case "Array": {
+												case "Array" | "ArrayList" | "NativeArray": {
 													var _type = "";
 													var rec:Void->String = () -> "";
 													rec = ()->
@@ -503,8 +555,8 @@ class JNI {
 																						case "Int64": _type = 'const std::vector<int64_t> &';
 																						case "Float": _type = 'const std::vector<double> &';
 																						case "Bool": _type = 'const std::vector<bool> &';
-																						case "Array": _type = 'const std::vector<${rec()}> &';
-																						case _: _type = 'const std::vector< std::shared_ptr<${p.name}> > &';
+																						case "Array" | "ArrayList" | "NativeArray": _type = 'const std::vector<${rec()}> &';
+																						case _: _type = 'const std::vector< ${getTypes(p.name)} > &';
 																					}
 																				}
 																			case _:
@@ -562,13 +614,17 @@ class JNI {
 												case "Float": _type = "double";
 												case "Void": _type = "void";
 												case "Bool": _type = "bool";
-												case "JavascriptCallback": _type =  "std::shared_ptr<::JavascriptCallback>";
-												case "JavascriptMap": _type = "std::shared_ptr<::JavascriptMap>";
-												case "JavascriptArray": _type ="std::shared_ptr<::JavascriptArray>";
-												case "JavascriptPromise": _type = "std::shared_ptr<::JavascriptPromise>";
-												case "JavascriptObject": _type = "std::shared_ptr<::JavascriptObject>";
+												case "IJavascriptCallback": _type =  "std::shared_ptr<::JavascriptCallback>";
+												case "IJavascriptMap": _type = "std::shared_ptr<::JavascriptMap>";
+												case "IJavascriptArray": _type ="std::shared_ptr<::JavascriptArray>";
+												case "IJavascriptPromise": _type = "std::shared_ptr<::JavascriptPromise>";
+												case "IJavascriptObject": _type = "std::shared_ptr<::JavascriptObject>";
+												case "IJobDispatcher": _type = "std::shared_ptr<::JobDispatcher>";
+												case "JobQueue": _type = "std::shared_ptr<::JobQueue>";
+												case "IJavascriptMapKeyIterator": _type = "std::shared_ptr<::JavascriptMapKeyIterator>";
+												case "IJob": _type = "std::shared_ptr<::Job>";
 												case "JavascriptType": _type = "::JavascriptType";
-												case "Array": {
+												case "Array" | "ArrayList" | "NativeArray": {
 													var xtype = "";
 													var rec:Void->String = () -> "";
 													rec = ()->
@@ -584,8 +640,8 @@ class JNI {
 																						case "Int64": xtype = 'std::vector<int64_t> &';
 																						case "Float": xtype = 'std::vector<double> &';
 																						case "Bool": xtype = 'std::vector<bool> &';
-																						case "Array": xtype = 'std::vector<${rec()}> &';
-																						case _: xtype = 'std::vector< std::shared_ptr<${p.name}> > &';
+																						case "Array" | "ArrayList" | "NativeArray": xtype = 'std::vector<${rec()}> &';
+																						case _: xtype = 'std::vector< ${getTypes(p.name)} > &';
 																					}
 																				}
 																			case _:
@@ -658,10 +714,10 @@ class JNI {
 			sbuf.add(func);
 		}
 		sbuf.add('\t\tprivate:\n');
-		sbuf.add('\t\tfriend ::mandolin::JniInterface<::$_name, ::mandolin_generated::$moduleName>;\n');
+		sbuf.add('\t\t\tfriend ::mandolin::JniInterface<::$_name, ::mandolin_generated::$moduleName>;\n');
 		sbuf.add('\t};\n\n');
 
-		sbuf.add('\tconst ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("$_package/$_name") };\n');
+		sbuf.add('\tconst ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("$_package/react/$_name") };\n');
 		JNIMethods(sbuf);
 		sbuf.add('};\n\n');
 		sbuf.add("} // namespace mandolin_generated \n");
@@ -684,6 +740,14 @@ class JNI {
 			switch (field.kind) {
 				case FFun(f):
 					{
+						var hasIgnore = false; 
+						for (meta in field.meta){
+							if(meta.name == "ignore"){
+								hasIgnore = true;
+							}
+						}
+						if(hasIgnore) continue;
+
 						var re = ~/([-_][a-z])/;
 						var fname = field.name;
 						if (re.match(field.name)) {
@@ -706,7 +770,7 @@ class JNI {
 													case TPType(t): {
 															switch (t) {
 																case TPath(p): {
-																		params.push('L$_package/${p.name};');
+																		params.push('L$_package/react/${p.name};');
 																	}
 																case _:
 															}
@@ -724,7 +788,8 @@ class JNI {
 												case "Void": _type = "V";
 												case "Bool": _type = "Z";
 												case "Dynamic": _type = "Ljava.lang.Object";
-												case "Array": _type = "Ljava/util/ArrayList;";
+												case "Array" | "ArrayList" | "NativeArray": _type = "Ljava/util/ArrayList;";
+
 											}
 											params.push('$_type');
 										}
@@ -742,7 +807,7 @@ class JNI {
 													case TPType(t): {
 															switch (t) {
 																case TPath(p): {
-																		sbuf.add('\tconst jmethodID method_$fname { ::mandolin::jniGetMethodID(clazz.get(), "$fname", "(${params.join(" ")})L$_package/${p.name};") };\n');
+																		sbuf.add('\tconst jmethodID method_$fname { ::mandolin::jniGetMethodID(clazz.get(), "$fname", "(${params.join(" ")})L$_package/react/${p.name};") };\n');
 																	}
 																case _:
 															}
@@ -759,7 +824,7 @@ class JNI {
 												case "Float": _type = "D";
 												case "Void": _type = "V";
 												case "Bool": _type = "Z";
-												case "Array": _type = "Ljava/util/ArrayList;";
+												case "Array" | "ArrayList" | "NativeArray": _type = "Ljava/util/ArrayList;";
 											}
 
 											sbuf.add('\tconst jmethodID method_$fname { ::mandolin::jniGetMethodID(clazz.get(), "$fname", "(${params.join(" ")})$_type") };\n');
@@ -777,18 +842,4 @@ class JNI {
 	}
 
 
-	static function genInterface() {
-		var sbuf = new StringBuf();
-		var pack = Context.getLocalModule();
-		var unpack = pack.split(".");
-		var pathLength = unpack.length;
-		var _name = '${unpack[pathLength - 1]}';
-		var nHeader = pack.replace(".", "/");
-		var _package = unpack.slice(0, pathLength - 1).join("/");
-
-		var funcs:Array<String> = [];
-		var imports:Array<String> = [];
-
-		var fields:Array<Field> = Context.getBuildFields();
-	}
 }

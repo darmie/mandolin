@@ -31,9 +31,9 @@ private:
 		public:
 			JavaProxy(JniType j);
 			~JavaProxy();
-			void resolveMap(const std::shared_ptr<JavascriptMap> & map) override;
-			void resolveArray(const std::shared_ptr<JavascriptArray> & arr) override;
-			void resolveObject(const std::shared_ptr<JavascriptObject> & obj) override;
+			void resolveMap(const std::shared_ptr<::JavascriptMap> & map) override;
+			void resolveArray(const std::shared_ptr<::JavascriptArray> & arr) override;
+			void resolveObject(const std::shared_ptr<::JavascriptObject> & obj) override;
 			void resolveDouble(double v) override;
 			void resolveInt(int32_t v) override;
 			void resolveString(const std::string & v) override;
@@ -41,13 +41,13 @@ private:
 			void resolveBoolean(bool v) override;
 			void reject(const std::string & code, const std::string & message) override;
 		private:
-		friend ::mandolin::JniInterface<::JavascriptPromise, ::mandolin_generated::NativeJavascriptPromise>;
+			friend ::mandolin::JniInterface<::JavascriptPromise, ::mandolin_generated::NativeJavascriptPromise>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/JavascriptPromise") };
-	const jmethodID method_resolveMap { ::mandolin::jniGetMethodID(clazz.get(), "resolveMap", "(Lco/zenturi/mandolin/xnative/JavascriptMap;)V") };
-	const jmethodID method_resolveArray { ::mandolin::jniGetMethodID(clazz.get(), "resolveArray", "(Lco/zenturi/mandolin/xnative/JavascriptArray;)V") };
-	const jmethodID method_resolveObject { ::mandolin::jniGetMethodID(clazz.get(), "resolveObject", "(Lco/zenturi/mandolin/xnative/JavascriptObject;)V") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/JavascriptPromise") };
+	const jmethodID method_resolveMap { ::mandolin::jniGetMethodID(clazz.get(), "resolveMap", "()V") };
+	const jmethodID method_resolveArray { ::mandolin::jniGetMethodID(clazz.get(), "resolveArray", "()V") };
+	const jmethodID method_resolveObject { ::mandolin::jniGetMethodID(clazz.get(), "resolveObject", "()V") };
 	const jmethodID method_resolveDouble { ::mandolin::jniGetMethodID(clazz.get(), "resolveDouble", "(D)V") };
 	const jmethodID method_resolveInt { ::mandolin::jniGetMethodID(clazz.get(), "resolveInt", "(I)V") };
 	const jmethodID method_resolveString { ::mandolin::jniGetMethodID(clazz.get(), "resolveString", "(Ljava/lang/String;)V") };

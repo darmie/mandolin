@@ -13,18 +13,18 @@ NativeJavascriptCallback::JavaProxy::JavaProxy(JniType j) : Handle(::mandolin::j
 
 NativeJavascriptCallback::::JavaProxy::~JavaProxy() = default;
 
-void NativeJavascriptCallback::JavaProxy::invoke(std::vector< std::shared_ptr<JavascriptObject> > & args) {
+void NativeJavascriptCallback::JavaProxy::invoke(std::vector< std::shared_ptr<::JavascriptObject> & > & args) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptCallback>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_invoke, ::mandolin::List<::mandolin_generated::NativeJavascriptObject>::fromCpp(jniEnv, args));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_invoke, ::mandolin::List<::mandolin_generated::NativeJavascriptObject>:fromCpp(jniEnv, args));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
-void NativeJavascriptCallback::JavaProxy::invokeSingleArg(const std::shared_ptr<JavascriptObject> & o) {
+void NativeJavascriptCallback::JavaProxy::invokeSingleArg(const std::shared_ptr<::JavascriptObject> & o) {
 	auto jniEnv = ::mandolin::jniGetThreadEnv();
 	::mandolin::JniLocalScope jscope(jniEnv, 10);
 	const auto& data = ::mandolin::JniClass<::mandolin_generated::NativeJavascriptCallback>::get();
-	jniEnv->CallVoidMethod(Handle::get().get(), data.method_invokeSingleArg, ::mandolin_generated::NativeJavascriptObject:fromCpp(jniEnv, o));
+	jniEnv->CallVoidMethod(Handle::get().get(), data.method_invokeSingleArg, ::mandolin_generated::NativeJavascriptObject::fromCpp(jniEnv, o));
 	::mandolin::jniExceptionCheck(jniEnv);
 }
 }

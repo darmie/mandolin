@@ -20,41 +20,58 @@ co.zenturi.mandolin.xnative.ReactBridge
 --each
 --interp
 
+
 --next
 
--cpp bin/Mandolin
+-D no-root
+-D no-compilation
+-java-lib lib/javax-inject.jar
+-java-lib lib/android.jar
+-java-lib lib/react-native-0.61.5.jar
+-java bin/java/
+
+-cmd make && bash make-jar.sh
+
+--next
+-dce full
+-cpp bin/Mandolin_64
 -D -verbose
+-D no-debug
 -D android 
 -D static_link 
 -D HXCPP_ARM64
+-D HXCPP_OPTIMIZE_LINK
 -D PLATFORM=android-21
             
 --next
-            
--cpp bin/Mandolin
--D -verbose
+-dce full        
+-cpp bin/Mandolin_V7
+-D no-debug
 -D android 
 -D static_link 
 -D HXCPP_ARMV7
+-D HXCPP_OPTIMIZE_LINK
 -D PLATFORM=android-21
-            
-            
+                    
 --next
-            
--cpp bin/Mandolin
--D -verbose
+-dce full          
+-cpp bin/Mandolin_X86
+-D no-debug
 -D android 
 -D static_link 
 -D HXCPP_X86
+-D HXCPP_OPTIMIZE_LINK
 -D PLATFORM=android-21
             
             
 --next
-            
--cpp bin/Mandolin
--D -verbose
+-dce full       
+-cpp bin/Mandolin_X86_64
+-D no-debug
 -D android 
 -D static_link 
 -D HXCPP_X86_64
+-D HXCPP_OPTIMIZE_LINK
 -D PLATFORM=android-21
+
             

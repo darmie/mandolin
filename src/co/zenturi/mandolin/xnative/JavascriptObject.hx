@@ -1,61 +1,107 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
-@:build(co.zenturi.mandolin.macros.JNI.bind())
-@:keep
-#if java
-interface JavascriptObject {
-    public  function getType():JavascriptType;
+#if java 
+
+import co.zenturi.mandolin.xnative.JavascriptMap.IJavascriptMap;
+import co.zenturi.mandolin.xnative.JavascriptArray.IJavascriptArray;
+
+@:native('co.zenturi.mandolin.xnative.react.JavascriptObject')
+extern class IJavascriptObject {
+    @:native('getType')
+    public function getType():JavascriptType;
+
+    @:native('isNull')
     public  function isNull():Bool;
-    public  function asBoolean():Bool;
-    public  function asDouble():Float;
 
-    public  function asInt():Int;
+    @:native('fromNull')
+    public function fromNull():IJavascriptObject;
 
-    public  function asString():String;
+    @:native('asBoolean')
+    public function asBoolean():Bool;
 
-    public  function asArray():JavascriptArray;
-    public  function asMap():JavascriptMap;
+    @:native('asDouble')
+    public function asDouble():Float;
 
-    @native @static public function fromNull():JavascriptObject;
-    @native @static public function fromBoolean(value:Bool):JavascriptObject;
-    @native @static public function fromDouble(value:Float):JavascriptObject;
+    @:native('fromBoolean')
+    public function fromBoolean(b:Bool):IJavascriptObject;
 
-    @native @static public function fromInt(value:Int):JavascriptObject;
-    @native @static public function fromString(value:String):JavascriptObject;
-    @native @static public function fromArray(value:JavascriptArray):JavascriptObject;
-    @native @static public function fromMap(value:JavascriptMap):JavascriptObject;
+    @:native('fromDouble')
+    public function fromDouble(d:Float):IJavascriptObject;
+
+    @:native('asInt')
+    public function asInt():Int;
+
+    @:native('fromInt')
+    public function fromInt(i:Int):IJavascriptObject;
+
+
+    @:native('asString')
+    public function asString():String;
+
+    @:native('fromString')
+    public function fromString(s:String):IJavascriptObject;
+
+    @:native('asArray')
+    public function asArray():IJavascriptArray;
+
+    @:native('fromArray')
+    public function fromArray(a:IJavascriptArray):IJavascriptObject;
+
+    @:native('fromMap')
+    public function fromMap(a:IJavascriptMap):IJavascriptObject;
 
 }
-#else 
+
+@:build(co.zenturi.mandolin.macros.JNI.bind(true))
+@:nativeGen
 class JavascriptObject {
-    public  function getType():MandolinObject<JavascriptType> {
+    public  function getType():JavascriptType {
         return null;
     }
     public  function isNull():Bool {
         return false;
     }
-    public  function asBoolean():Bool { return false;}
-    public  function asDouble():Float { return 0;}
+    public  function asBoolean():Bool {
+        return false;
+    }
+    public  function asDouble():Float {
+        return 0;
+    }
 
-    public  function asInt():Int { return 0;}
+    public  function asInt():Int {
+        return 0;
+    }
 
-    public  function asString():String { return null;}
+    public  function asString():String {
+        return null;
+    }
 
-    public  function asArray():MandolinObject<JavascriptArray> { return null;}
-    public  function asMap():MandolinObject<JavascriptMap> {return null;}
-
-    @native @static public static function fromNull():MandolinObject<JavascriptObject> {return null;}
-    @native @static public static function fromBoolean(value:Bool):MandolinObject<JavascriptObject> {return null;}
-    @native @static public static function fromDouble(value:Float):MandolinObject<JavascriptObject> {return null;}
-
-    @native @static public static function fromInt(value:Int):MandolinObject<JavascriptObject> {return null;}
-    @native @static public static function fromString(value:String):MandolinObject<JavascriptObject> {return null;}
-    @native @static public static function fromArray(value:MandolinObject<JavascriptArray>):MandolinObject<JavascriptObject> {return null;}
-    @native @static public static function fromMap(value:MandolinObject<JavascriptMap>):MandolinObject<JavascriptObject> {return null;}
-
+    public  function asArray():JavascriptArray {
+        return null;
+    }
+    public  function asMap():JavascriptMap {
+        return null;
+    }
+    
+    public static function fromNull():JavascriptObject {
+        return null;
+    }
+    public static function fromBoolean(value:Bool):JavascriptObject {
+        return null;
+    }
+    public static function fromDouble(value:Float):JavascriptObject {
+        return null;
+    }
+    public static function fromString(value:String):JavascriptObject {
+        return null;
+    }
+    public static function fromArray(value:JavascriptArray):JavascriptObject {
+        return null;
+    }
+    public static function fromMap(value:JavascriptMap):JavascriptObject {
+        return null;
+    }
 }
-#end
 #elseif cpp 
 import haxe.io.FPHelper;
 
@@ -111,6 +157,7 @@ public:
 };
 ')
 @:keep
+@:nativeGen
 interface IJavascriptObject {
 }
 @:include('co/zenturi/mandolin/xnative/IJavascriptArray.h')

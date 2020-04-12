@@ -1,51 +1,79 @@
 package co.zenturi.mandolin.xnative;
 
 
-#if ((java || !macro ) && !cpp)
-#if java
+#if java  
+
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
-#end
+// import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import co.zenturi.mandolin.xnative.JavascriptMap.IJavascriptMap;
+import co.zenturi.mandolin.xnative.JavascriptArray.IJavascriptArray;
+import co.zenturi.mandolin.xnative.JobQueue;
+import co.zenturi.mandolin.xnative.JobDispatcher.IJobDispatcher;
+
+@:native('co.zenturi.mandolin.xnative.react.ReactBridge')
+extern class IReactBridge {
+    @:native('createMap')
+    public function createMap():IJavascriptMap;
+    @:native('createArray')
+    public function createArray():IJavascriptArray;
+    @:native('copyMap')
+    public function copyMap(m:IJavascriptMap):IJavascriptMap;
+    @:native('copyArray')
+    public function copyArray(a:IJavascriptArray):IJavascriptArray;
+    @:native('emitEventWithMap')
+    public function emitEventWithMap(name:String, params:IJavascriptMap):Void;
+    @:native('emitEventWithArray')
+    public function emitEventWithArray(name:String, params:IJavascriptArray):Void;
+    @:native('createJobDispatcher')
+    public function createJobDispatcher(queue:JobQueue):IJobDispatcher;
+}
+
+@:build(co.zenturi.mandolin.macros.JNI.bind())
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
+@dep("com.facebook.react.bridge.*")
 @:keep
-class ReactBridge {
+@:nativeGen
+class ReactBridge extends IReactBridge {
 
-   var mReactContext #if java :ReactApplicationContext #else :Dynamic #end;
+   var mReactContext :ReactApplicationContext;
 
-    public function new(context:#if java ReactApplicationContext #else Dynamic #end) {
+    public function new(context:ReactApplicationContext ) {
         mReactContext = context;
     }
    
 
-    public function createMap():MandolinObject<JavascriptMap> {
+    override public function createMap():IJavascriptMap {
         return MandolinReact.createMap();
     }
 
-    public function createArray():MandolinObject<JavascriptArray> {
+    override public function createArray():IJavascriptArray {
         return MandolinReact.createArray();
     }
 
-    public function copyMap(m:MandolinObject<JavascriptMap>):MandolinObject<JavascriptMap> {
-       return MandolinReact.createMap(m);
+    override public function copyMap(m:IJavascriptMap):IJavascriptMap {
+       return MandolinReact.createMap(cast m);
     }
 
-    public function copyArray(a:MandolinObject<JavascriptArray>):MandolinObject<JavascriptArray> {
-        return MandolinReact.createArray(a);
+    override public function copyArray(a:IJavascriptArray):IJavascriptArray {
+        return MandolinReact.createArray(cast a);
     }
 
-    public function emitEventWithMap(name:String, params:MandolinObject<JavascriptMap>):Void {
-        #if java
-        mReactContext.getJSModule(untyped __java__('RCTNativeAppEventEmitter.class')).emit(name, MandolinReact.unwrap(params));
-        #end
+    override public function emitEventWithMap(name:String, params:IJavascriptMap):Void {
+  
+        var args:JavascriptMap = cast params;
+        var emitter:RCTNativeAppEventEmitter = mReactContext.getJSModule(java.lang.Class.forName('RCTNativeAppEventEmitter'));
+        emitter.emit(name, args.getWritableMap());
     }
 
-    public function emitEventWithArray(name:String, params:MandolinObject<JavascriptArray>):Void {
-        #if java
-        mReactContext.getJSModule(untyped __java__('RCTNativeAppEventEmitter.class')).emit(name, MandolinReact.unwrap(params));
-        #end
+    override public function emitEventWithArray(name:String, params:IJavascriptArray):Void {
+
+        var args:JavascriptArray = cast params;
+        var emitter:RCTNativeAppEventEmitter = mReactContext.getJSModule(java.lang.Class.forName('RCTNativeAppEventEmitter'));
+        emitter.emit(name, args.getWritableArray());
     }
 
-    public function createJobDispatcher(queue:MandolinObject<JobQueue>):MandolinObject<JobDispatcher> {
+    override public function createJobDispatcher(queue:JobQueue):IJobDispatcher {
         return new JobDispatcher(queue);
     }
 } 
@@ -79,6 +107,7 @@ public:
 };
 ')
 @:keep
+@:nativeGen
 interface IReactBridge{}
 @:include('co/zenturi/mandolin/xnative/IReactBridge.h')
 @:include('co/zenturi/mandolin/xnative/IJavascriptArray.h')
@@ -92,11 +121,11 @@ extern class ReactBridge {
     @:native('createMap')
     public function createMap():JavascriptMap;
     @:native('createArray')
-    public function createArray():JavascriptMap;
+    public function createArray():JavascriptArray;
     @:native('copyMap')
-    public function copyMap(m:JavascriptMap):Void;
+    public function copyMap(m:JavascriptMap):JavascriptMap;
     @:native('copyArray')
-    public function copyArray(a:JavascriptArray):Void;
+    public function copyArray(a:JavascriptArray):JavascriptArray;
     @:native('emitEventWithMap')
     public function emitEventWithMap(name:String, params:JavascriptMap):Void;
     @:native('emitEventWithArray')

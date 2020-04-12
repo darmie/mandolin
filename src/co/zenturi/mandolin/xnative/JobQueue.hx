@@ -1,11 +1,25 @@
 package co.zenturi.mandolin.xnative;
 
-#if ((java || !macro ) && !cpp)
+#if java 
+import co.zenturi.mandolin.xnative.Job.IJob;
+@:build(co.zenturi.mandolin.macros.JNI.bind(true))
 @:build(co.zenturi.mandolin.macros.JNI.proxy())
-interface JobQueue {
-    public function poll():MandolinObject<Job>;
+@:native('co.zenturi.mandolin.xnative.react.JobQueue')
+extern class JobQueue {
+    @:native('poll')
+    public function poll():IJob;
+
+    @:native('interruptPoll')
     public function interruptPoll():Void;
 }
+
+
+// @:keep
+// @:nativeGen
+// interface JobQueue {
+//     public function poll():MandolinObject<Job>;
+//     public function interruptPoll():Void;
+// }
 #elseif cpp
 @:headerCode('
 #include <memory>
@@ -62,6 +76,7 @@ class JobQueueImpl : public JobQueue {
 };
 ')
 @:keep
+@:nativeGen
 interface IJobQueue {
 
 }

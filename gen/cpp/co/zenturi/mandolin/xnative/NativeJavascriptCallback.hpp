@@ -31,15 +31,15 @@ private:
 		public:
 			JavaProxy(JniType j);
 			~JavaProxy();
-			void invoke(const std::vector< std::shared_ptr<JavascriptObject> > & args) override;
-			void invokeSingleArg(const std::shared_ptr<JavascriptObject> & o) override;
+			void invoke(const std::vector< std::shared_ptr<::JavascriptObject> > & args) override;
+			void invokeSingleArg(const std::shared_ptr<::JavascriptObject> & o) override;
 		private:
-		friend ::mandolin::JniInterface<::JavascriptCallback, ::mandolin_generated::NativeJavascriptCallback>;
+			friend ::mandolin::JniInterface<::JavascriptCallback, ::mandolin_generated::NativeJavascriptCallback>;
 	};
 
-	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/JavascriptCallback") };
+	const ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("co/zenturi/mandolin/xnative/react/JavascriptCallback") };
 	const jmethodID method_invoke { ::mandolin::jniGetMethodID(clazz.get(), "invoke", "(Ljava/util/ArrayList;)V") };
-	const jmethodID method_invokeSingleArg { ::mandolin::jniGetMethodID(clazz.get(), "invokeSingleArg", "(Lco/zenturi/mandolin/xnative/JavascriptObject;)V") };
+	const jmethodID method_invokeSingleArg { ::mandolin::jniGetMethodID(clazz.get(), "invokeSingleArg", "()V") };
 };
 
 } // namespace mandolin_generated 
