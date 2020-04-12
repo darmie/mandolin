@@ -182,7 +182,7 @@ abstract HxmlBuilder(Array<String>) from Array<String> to Array<String> {
 -java-lib lib/react-native-0.61.5.jar
 -java bin/java/
 
--cmd make && bash make-jar.sh
+-cmd make && bash make-jar.sh && make clean
 
 --next
 -dce full
