@@ -51,7 +51,7 @@ class ReactModule {
 		var pathLength = pack.split(".").length;
 		var unpack = pack.split(".");
 		var packPath = unpack.slice(0, pathLength - 1).join("/");
-		var classPath = '${dir}gen/jni/$packPath/react';
+		var classPath = '${dir}gen/jni/$packPath';
 		if (!FileSystem.exists(classPath)) {
 			FileSystem.createDirectory(classPath);
 		}

@@ -1,14 +1,14 @@
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <co/zenturi/mandolin/xnative/IJavascriptType.h>
-#include <co/zenturi/mandolin/xnative/IJavascriptObject.h>
-#include <co/zenturi/mandolin/xnative/IJavascriptMap.h>
-#include <co/zenturi/mandolin/xnative/IJavascriptMapKeyIterator.h>
-#include <co/zenturi/mandolin/xnative/IJavascriptArray.h>
-#include <co/zenturi/mandolin/xnative/IReactBridge.h>
-#include <co/zenturi/mandolin/xnative/IJobQueue.h>
-#include <co/zenturi/mandolin/xnative/IJobDispatcher.h>
+#include <co/zenturi/mandolin/xnative/react/IJavascriptType.h>
+#include <co/zenturi/mandolin/xnative/react/IJavascriptObject.h>
+#include <co/zenturi/mandolin/xnative/react/IJavascriptMap.h>
+#include <co/zenturi/mandolin/xnative/react/IJavascriptMapKeyIterator.h>
+#include <co/zenturi/mandolin/xnative/react/IJavascriptArray.h>
+#include <co/zenturi/mandolin/xnative/react/IReactBridge.h>
+#include <co/zenturi/mandolin/xnative/react/IJobQueue.h>
+#include <co/zenturi/mandolin/xnative/react/IJobDispatcher.h>
 
 class ReactBridge;
 class JavascriptArray;

@@ -35,7 +35,7 @@ class JNIClassGen {
 			FileSystem.createDirectory('${dir}gen/jni');
 		}
 
-		var classPath = '${dir}gen/jni/$_package/react';
+		var classPath = '${dir}gen/jni/$_package';
 		if (!FileSystem.exists(classPath)) {
 			FileSystem.createDirectory(classPath);
 		}
@@ -53,7 +53,7 @@ class JNIClassGen {
 	static function constructJNIClass(file, _package) {
 		var sbuf = new StringBuf();
 
-		sbuf.add('package $_package.react;\n\n');
+		sbuf.add('package $_package;\n\n');
 		for (dep in Context.getLocalClass().get().meta.extract('dep')) {
 			for (p in dep.params) {
 				switch (p.expr) {
@@ -176,7 +176,7 @@ class JNIClassGen {
 	static function constructClassImpl(file, _package) {
 		var sbuf = new StringBuf();
 
-		sbuf.add('package $_package.react;\n\n');
+		sbuf.add('package $_package;\n\n');
 		for (dep in Context.getLocalClass().get().meta.extract('dep')) {
 			for (p in dep.params) {
 				switch (p.expr) {

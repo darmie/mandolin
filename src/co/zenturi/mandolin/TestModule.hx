@@ -1,7 +1,7 @@
 package co.zenturi.mandolin;
 
 #if cpp
-import co.zenturi.mandolin.xnative.*;
+import co.zenturi.mandolin.xnative.react.*;
 
 @:build(co.zenturi.mandolin.macros.ReactModule.bind())
 @:build(co.zenturi.mandolin.macros.ReactModuleCpp.bind(true))

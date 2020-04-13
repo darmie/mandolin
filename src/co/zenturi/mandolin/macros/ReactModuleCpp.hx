@@ -55,7 +55,7 @@ class ReactModuleCpp {
 		var pathLength = pack.split(".").length;
 		var unpack = pack.split(".");
 		var packPath = unpack.slice(0, pathLength - 1).join("/");
-		var classPath = '${dir}gen/cpp/$packPath/react';
+		var classPath = '${dir}gen/cpp/$packPath';
 		var _name = unpack[pathLength - 1];
 
 		if (!FileSystem.exists(classPath)) {
@@ -74,12 +74,12 @@ class ReactModuleCpp {
 			constructImplHeader('$classPath/$_name.hpp');
 		}
 
-		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$moduleName.cpp') == -1) {
-			cppFiles.push('${dir}gen/cpp/$packPath/react/$moduleName.cpp');
+		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/$moduleName.cpp') == -1) {
+			cppFiles.push('${dir}gen/cpp/$packPath/$moduleName.cpp');
 		}
 
-		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/react/$_name.hpp') == -1) {
-			cppFiles.push('${dir}gen/cpp/$packPath/react/$_name.hpp');
+		if (cppFiles.indexOf('${dir}gen/cpp/$packPath/$_name.hpp') == -1) {
+			cppFiles.push('${dir}gen/cpp/$packPath/$_name.hpp');
 		}
 
 		var buildXml = new StringBuf();
@@ -111,7 +111,7 @@ class ReactModuleCpp {
 		sbuf.add('#include "$moduleName.hpp"\n\n');
 		sbuf.add("namespace mandolin_generated {\n\n");
 		var CppProxy = "$CppProxy";
-		sbuf.add('\t$moduleName::$moduleName() : ::mandolin::JniInterface<::$_name, $moduleName>("$_package/react/$_name$CppProxy") {}\n\n');
+		sbuf.add('\t$moduleName::$moduleName() : ::mandolin::JniInterface<::$_name, $moduleName>("$_package/$_name$CppProxy") {}\n\n');
 		sbuf.add('\t$moduleName::~$moduleName() = default;\n\n');
 
 		// Fields
@@ -289,9 +289,9 @@ class ReactModuleCpp {
 								case TPath(p): {
 										argType = p.name;
 										switch p.name {
-											case "JavascriptMap": impName = '#include "NativeJavascriptMap.hpp"\n';
-											case "JavascriptArray": impName = '#include "NativeJavascriptArray.hpp"\n';
-											case "JavascriptCallback": impName = '#include "NativeJavascriptCallback.hpp"\n';
+											case "JavascriptMap": impName = '#include "react/NativeJavascriptMap.hpp"\n';
+											case "JavascriptArray": impName = '#include "react/NativeJavascriptArray.hpp"\n';
+											case "JavascriptCallback": impName = '#include "react/NativeJavascriptCallback.hpp"\n';
 											case _:
 										}
 									}
@@ -309,7 +309,7 @@ class ReactModuleCpp {
 										switch p.name {
 											case "Void":
 											case _: {
-													impName = '#include <NativeJavascriptPromise.hpp>\n';
+													impName = '#include <react/NativeJavascriptPromise.hpp>\n';
 
 													if (imports.indexOf(impName) == -1) {
 														imports.push(impName);
@@ -333,7 +333,7 @@ class ReactModuleCpp {
 		// sbuf.add('#include <$_package/react/$_name.hpp>\n\n');
 		sbuf.add('#include "$_name.hpp"\n\n');
 		sbuf.add('#include <mandolin_helpers.h>\n\n');
-		sbuf.add('#include <NativeReactBridge.hpp>\n\n');
+		sbuf.add('#include <react/NativeReactBridge.hpp>\n\n');
 		for (imp in imports) {
 			sbuf.add(imp);
 		}
@@ -403,13 +403,13 @@ class ReactModuleCpp {
 										switch p.name {
 											case "JavascriptMap":
 												impName = 'class JavascriptMap;\n';
-												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptMap.h>\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/react/IJavascriptMap.h>\n';
 											case "JavascriptArray":
 												impName = 'class JavascriptArray;\n';
-												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptArray.h>\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/react/IJavascriptArray.h>\n';
 											case "JavascriptCallback":
 												impName = 'class JavascriptCallback;\n';
-												impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptCallback.h>\n';
+												impName2 = '#include <co/zenturi/mandolin/xnative/react/IJavascriptCallback.h>\n';
 											case _:
 										}
 									}
@@ -441,7 +441,7 @@ class ReactModuleCpp {
 											case _: {
 													var _type = "const std::shared_ptr<::JavascriptPromise>";
 													impName = 'class JavascriptPromise;\n';
-													impName2 = '#include <co/zenturi/mandolin/xnative/IJavascriptPromise.h>\n';
+													impName2 = '#include <co/zenturi/mandolin/xnative/react/IJavascriptPromise.h>\n';
 													params.push(['&promise', _type]);
 													hasPromise = true;
 

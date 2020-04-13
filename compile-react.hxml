@@ -1,20 +1,21 @@
 
 -cp /Volumes/Vibranium/Workspace/Zenturi/project/Mandolin/src/
 
+co.zenturi.mandolin.react.ReactBuild
 co.zenturi.mandolin.TestModule
-co.zenturi.mandolin.xnative.JavascriptArray
-co.zenturi.mandolin.xnative.JavascriptCallback
-co.zenturi.mandolin.xnative.JavascriptMap
-co.zenturi.mandolin.xnative.JavascriptMapKeyIterator
-co.zenturi.mandolin.xnative.JavascriptObject
-co.zenturi.mandolin.xnative.JavascriptPromise
-co.zenturi.mandolin.xnative.JavascriptType
-co.zenturi.mandolin.xnative.Job
-co.zenturi.mandolin.xnative.JobDispatcher
-co.zenturi.mandolin.xnative.JobQueue
-co.zenturi.mandolin.xnative.MandolinObject
-co.zenturi.mandolin.xnative.MandolinReact
-co.zenturi.mandolin.xnative.ReactBridge
+co.zenturi.mandolin.xnative.react.JavascriptArray
+co.zenturi.mandolin.xnative.react.JavascriptCallback
+co.zenturi.mandolin.xnative.react.JavascriptMap
+co.zenturi.mandolin.xnative.react.JavascriptMapKeyIterator
+co.zenturi.mandolin.xnative.react.JavascriptObject
+co.zenturi.mandolin.xnative.react.JavascriptPromise
+co.zenturi.mandolin.xnative.react.JavascriptType
+co.zenturi.mandolin.xnative.react.Job
+co.zenturi.mandolin.xnative.react.JobDispatcher
+co.zenturi.mandolin.xnative.react.JobQueue
+co.zenturi.mandolin.xnative.react.MandolinObject
+co.zenturi.mandolin.xnative.react.MandolinReact
+co.zenturi.mandolin.xnative.react.ReactBridge
 
 -dce full
 --each
@@ -28,13 +29,21 @@ co.zenturi.mandolin.xnative.ReactBridge
 -java-lib lib/javax-inject.jar
 -java-lib lib/android.jar
 -java-lib lib/react-native-0.61.5.jar
--java bin/java/
+-java bin/react/java/
 
+--next 
+co.zenturi.mandolin.react.ReactJavaMake
+
+--interp
+
+--next
+
+-cmd cd gen 
 -cmd make && bash make-jar.sh && make clean
 
 --next
 -dce full
--cpp bin/Mandolin_64
+-cpp bin/react/Mandolin_64
 -D -verbose
 -D no-debug
 -D android 
@@ -45,7 +54,7 @@ co.zenturi.mandolin.xnative.ReactBridge
             
 --next
 -dce full        
--cpp bin/Mandolin_V7
+-cpp bin/react/Mandolin_V7
 -D no-debug
 -D android 
 -D static_link 
@@ -55,7 +64,7 @@ co.zenturi.mandolin.xnative.ReactBridge
                     
 --next
 -dce full          
--cpp bin/Mandolin_X86
+-cpp bin/react/Mandolin_X86
 -D no-debug
 -D android 
 -D static_link 
@@ -66,7 +75,7 @@ co.zenturi.mandolin.xnative.ReactBridge
             
 --next
 -dce full       
--cpp bin/Mandolin_X86_64
+-cpp bin/react/Mandolin_X86_64
 -D no-debug
 -D android 
 -D static_link 
@@ -74,4 +83,13 @@ co.zenturi.mandolin.xnative.ReactBridge
 -D HXCPP_OPTIMIZE_LINK
 -D PLATFORM=android-21
 
+-cmd rm -rf gen/android
+-cmd mkdir gen/android
+-cmd mkdir gen/android/react
+
+-cmd mkdir gen/android/react/ARM64 && cp bin/react/Mandolin_64/liboutput-64.a gen/android/react/ARM64/native_lib.a 
+-cmd mkdir gen/android/react/ARMV7 && cp bin/react/Mandolin_V7/liboutput-v7.a gen/android/react/ARMV7/native_lib.a
+-cmd mkdir gen/android/react/X86 && cp bin/react/Mandolin_X86/liboutput-x86.a gen/android/react/X86/native_lib.a
+-cmd mkdir gen/android/react/X86_64 && cp bin/react/Mandolin_X86_64/liboutput-x86_64.a gen/android/react/X86_64/native_lib.a
+-cmd mkdir gen/android/react/lib && mv gen/react-module-lib.jar gen/android/react/lib/react-module-lib.jar
             

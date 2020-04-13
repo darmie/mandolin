@@ -513,7 +513,7 @@ class JNI {
 													case TPType(t): {
 															switch (t) {
 																case TPath(p): {
-																		impName = '#include <co/zenturi/mandolin/xnative/${p.name}.h>\n';
+																		impName = '#include <co/zenturi/mandolin/xnative/react/${p.name}.h>\n';
 																		argType = 'const std::shared_ptr<${p.name}> &';
 																	}
 																case _:
@@ -597,7 +597,7 @@ class JNI {
 													case TPType(t): {
 															switch (t) {
 																case TPath(p): {
-																		impName = '#include <co/zenturi/mandolin/xnative/${p.name}.h>\n';
+																		impName = '#include <co/zenturi/mandolin/xnative/react/${p.name}.h>\n';
 																		_type = 'std::shared_ptr<${p.name}>';
 																	}
 																case _:
@@ -717,7 +717,7 @@ class JNI {
 		sbuf.add('\t\t\tfriend ::mandolin::JniInterface<::$_name, ::mandolin_generated::$moduleName>;\n');
 		sbuf.add('\t};\n\n');
 
-		sbuf.add('\tconst ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("$_package/react/$_name") };\n');
+		sbuf.add('\tconst ::mandolin::GlobalRef<jclass> clazz { ::mandolin::jniFindClass("$_package/$_name") };\n');
 		JNIMethods(sbuf);
 		sbuf.add('};\n\n');
 		sbuf.add("} // namespace mandolin_generated \n");

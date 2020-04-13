@@ -3,8 +3,7 @@
 -dce full
 co.zenturi.mandolin.react.ReactBuild
 
-
-compile-react.hxml
+-cmd bash build_react
 
 
 
